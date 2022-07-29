@@ -1,6 +1,8 @@
 
 {% extends 'youtube/base.html' %}
 {% load static %}
+{% load subscribersinthousand %}
+{% block title %} {{channel_item.snippet.title}} {% endblock %}
 {% block extrastylesheet %}
 <link rel="stylesheet" href="{% static 'youtube/css/home.css' %}">
 <link rel="stylesheet" href="{% static 'youtube/css/channel_home.css' %}">
@@ -46,7 +48,24 @@
     </div>  
   </nav> -->
 <div class="upper_block_main">
+    <div class="channel_header">
+      <div class="channel_header_container">
+        <div class="channel_header_left">
+          <div class="channel_profile_pic">
+            <img class="channel_profile_image" src="{{channel_item.snippet.thumbnails.default.url}}" alt="{{video_title | safe}}" style="width:85px">
+          </div>
+          <div class="channel_title_container">
+                <h1 class="channel_title">{{channel_item.snippet.title}}</h1>
+                <p class="subscribers">{{channel_item.statistics.subscriberCount |subscribersinthousand}} Subscribers</p>
+          </div>
+        </div>
+        
+        </div>
 
+      </div>
+
+      
+    </div>
 </div>
 <div class="playlist_main_div">
     <div>

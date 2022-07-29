@@ -1,3 +1,4 @@
+from ast import keyword
 from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import User
@@ -11,3 +12,11 @@ class WatchList(models.Model):
     upload_date=models.CharField(max_length=100)
     channel_profile_pic= models.CharField(max_length=100)
     video_thumbnail_pic= models.CharField(max_length=100)
+
+class Category(models.Model):
+    category= models.CharField(max_length=40)
+    def __str__(self):
+        return str(self.category)
+class Keyword(models.Model):
+    category= models.ForeignKey(Category, on_delete=models.CASCADE)
+    keyword= models.CharField(max_length=50)

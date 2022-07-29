@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render,redirect
+
 from .models import *
 from googleapiclient.discovery import build
 from django.contrib.auth.models import User
@@ -74,7 +75,7 @@ def home(request):
 
     response = request1.execute()
     response_channel_snippet=request_channel_snippet.execute()
-    print('response****************',response)
+    # print('response****************',response)
     items=response['items']
     snippet_items= response_channel_snippet['items']
     snippet_item= snippet_items[0]
@@ -86,23 +87,36 @@ def home(request):
     uploads=playlist['uploads']
     # print(response)
     # print(uploads)
-
-    video_request = youtube.search().list(
-        part='snippet',
-        type='video',
-        q=' footlball,athletics',
-        maxResults= 50
-      )
-    list=[]
-    video_response = video_request.execute()
-    video_items= video_response['items']
-   
+    all_keywords= Keyword.objects.all()
+    keyword_var=''
+    data_list= []
+    
+    for keyword in all_keywords:
+        keyword_var= keyword.keyword
+     
+        video_request = youtube.search().list(
+            part='snippet',
+            type='video',
+            # q='Athletes,Football, Volleyball',
+            q=keyword_var,
+            maxResults=5
+            
+        
+        )
+        list=[]
+        video_response = video_request.execute()
+        video_items= video_response['items']
+        print(keyword_var,video_items)
+        video_item= video_items[0]
+        data_list= data_list+video_items
+    # print(video_items)
+    # print(data_list)
     watchlist_videos= WatchList.objects.filter(user=request.user)
     videos_id_list=[]
     for video in watchlist_videos:
         videos_id_list.append(video.video_id)
-    print(videos_id_list)
-    context= {'data': video_items, 'watchlist_videos': videos_id_list}
+    # print(video_response)
+    context= {'data': data_list, 'watchlist_videos': videos_id_list}
     return render(request, 'youtube/home.html', context)
 
 
@@ -188,11 +202,20 @@ def channel_home_view(request):
         maxResults= 50
       ) 
         
-        
+        # To get the cahnnel profile pic
+        request_channel_snippet = youtube.channels().list(
+            part='snippet, statistics',
+            id=channel_id 
+        )
+        response_channel_snippet=request_channel_snippet.execute()
+        channel_snippet_items= response_channel_snippet['items']
+        channel_snippet_item= channel_snippet_items[0]
+        # End profile picture
+        print('channel_snippet_item+++++++++++++++++++++',response_channel_snippet)
         response = pl_request.execute()
         video_reponse= video_request.execute()
         pl_items= response['items']
         video_items= video_reponse['items']
-        context= {'pl_items': pl_items, 'video_items': video_items}
+        context= {'pl_items': pl_items, 'video_items': video_items, 'channel_item': channel_snippet_item}
         print('Playlist ___', video_reponse)
         return render(request, 'youtube/channel_home.html', context)

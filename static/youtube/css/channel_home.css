@@ -5,3 +5,19 @@
 .box_title{
     margin-left: 6px;
 }
+.upper_block_main{
+    margin-top: 20px;
+}
+.channel_header_left{
+    display: flex;
+}
+.channel_profile_image {
+    border-radius: 50%;
+    height: 80px;
+  }
+  .channel_title_container{
+    margin-left: 20px;
+  }
+  .channel_title{
+    font-size: 30px !important;
+  }
