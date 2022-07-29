@@ -1,0 +1,40 @@
+
+{% extends 'youtube/base.html' %}
+{% load static %}
+{% block extrastylesheet %}
+<link rel="stylesheet" href="{% static 'youtube/css/video_player.css' %}">
+{% endblock %}
+{% block content %}
+<div class="upper_block_main">
+    <iframe class="iframe"  src="https://www.youtube.com/embed/{{video_id}}">
+    </iframe>
+</div>
+<div class="lower_block container">
+    <div class="video_title">
+        <h5>{{video_title | safe}}</h5>
+    </div>
+    <div class="video_date">
+        <p>{{ upload_date}}</p>
+    </div>
+    <div class="video_desc">
+        <div>
+            <div>
+                <img class="" src="{{channel_profile}}" alt="Avatar" style="width:100px">
+       
+            </div>
+        </div> 
+        <div class="description_block">
+            <div><h3 class="channel_title"> {{channel_title}}</h3></div>
+            <div> <p>{{video_description | safe}}</p></div>
+            
+        </div>
+           
+    </div>
+    
+</div>
+  
+    
+    
+{% endblock %}
+
+

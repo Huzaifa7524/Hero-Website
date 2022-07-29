@@ -1,0 +1,27 @@
+.upper_block_main{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+.iframe{
+    width:1040px;
+    height:523px;
+}
+.lower_block{
+    margin-bottom: 100px;
+    padding-left: 50px !important;
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.video_desc{
+    display: flex;
+   
+}
+img {
+    border-radius: 50%;
+    height: 95px;
+  }
+.description_block{
+    margin-left: 5px;
+}

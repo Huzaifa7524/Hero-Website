@@ -1,0 +1,71 @@
+.videos_main_div{
+    display: flex; 
+    justify-content: left; 
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+.video_box{
+    /* cursor: pointer; */
+    margin: 10px;
+    /* height: 235px; */
+    overflow-y: hidden;
+    width: 20%;
+}
+.video_box_upper{
+    cursor: pointer;
+}
+.video_title{
+    font-size: 12px;
+}
+.title_box{
+    height: 60px;
+    overflow: hidden;
+}
+.save_button{
+    border: none !important;
+    background: white;
+}
+.unsave_button{
+    border: none !important;
+    background: white;
+}
+.watch_list_block{
+    display: flex;
+    justify-content: space-between;
+}
+
+.playlist_main_div{
+
+    display: block;
+    overflow-x:scroll ;
+}
+.playlist_main_div::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .playlist_main_div {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .playlist_sub_div{
+    display: flex;
+    justify-content: left;
+  }
+
+  .jumbotron{
+    background: #919191;
+  }
+  .upper_section_buttons{
+    border: 1px solid white;
+    background: #919191;
+    width: 161px;
+    padding: 7px;
+    color: white;
+    margin-right: 10px;
+  }
+  .upper_section_buttons_active{
+    color: black !important;
+    background: white !important;
+  }
