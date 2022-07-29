@@ -25,7 +25,7 @@ SECRET_KEY = 'ed-x2-kx5pam4*j5irux=txi+kv6yh(z-en5v+s61*7n2yljbn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
