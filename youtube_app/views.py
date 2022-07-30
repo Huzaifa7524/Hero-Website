@@ -16,6 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 api_key= 'AIzaSyAzaAIFiU2QKcD4sqC47j-I9-0fAk3awHw'
 api_key_2='AIzaSyAo9njxj8OJpWshmpCyamYf9GJXN-kIi64'
 api_key_3='AIzaSyBztkmRfxkYWS9QCtS9XD8r6clecRBVK2s'
+api_key_4='AIzaSyA4Mt5QJqtcTJ77BHIeFAj12M6s5mSUiFQ'
 # Create your views here.
 def register(request):
     if request.method== 'POST':
@@ -64,29 +65,29 @@ def home(request):
 
     # api_key = '#YOURAPIKEY'
 
-    youtube = build('youtube', 'v3', developerKey=api_key_3)
+    youtube = build('youtube', 'v3', developerKey=api_key_4)
 
-    request1 = youtube.channels().list(
-            part='contentDetails',
-            forUsername='schafer5'
-        )
-    request_channel_snippet = youtube.channels().list(
-            part='snippet',
-            forUsername='schafer5' 
-        )
+    # request1 = youtube.channels().list(
+    #         part='contentDetails',
+    #         forUsername='schafer5'
+    #     )
+    # request_channel_snippet = youtube.channels().list(
+    #         part='snippet',
+    #         forUsername='schafer5' 
+    #     )
 
-    response = request1.execute()
-    response_channel_snippet=request_channel_snippet.execute()
-    # print('response****************',response)
-    items=response['items']
-    snippet_items= response_channel_snippet['items']
-    snippet_item= snippet_items[0]
-    profile_picture= snippet_item['snippet']['thumbnails']['default']['url']
+    # response = request1.execute()
+    # response_channel_snippet=request_channel_snippet.execute()
+    # # print('response****************',response)
+    # items=response['items']
+    # snippet_items= response_channel_snippet['items']
+    # snippet_item= snippet_items[0]
+    # profile_picture= snippet_item['snippet']['thumbnails']['default']['url']
 
-    item=items[0]
-    content= item['contentDetails']
-    playlist= content['relatedPlaylists']
-    uploads=playlist['uploads']
+    # item=items[0]
+    # content= item['contentDetails']
+    # playlist= content['relatedPlaylists']
+    # uploads=playlist['uploads']
     # print(response)
     # print(uploads)
     all_keywords= Keyword.objects.all()
@@ -101,22 +102,20 @@ def home(request):
             type='video',
             # q='Athletes,Football, Volleyball',
             q=keyword_var,
-            maxResults=5
+            maxResults=15,
+            order= 'date'
             
         
         )
         list=[]
         video_response = video_request.execute()
         video_items= video_response['items']
-        # print(keyword_var,video_items)
-        video_item= video_items
-        video_category= keyword.category.category
-        temp={'category':video_category}
-        video_item.append(temp)
-        dummy_data_list.append(video_item)
+        
+       
+        
         data_list= data_list+video_items
     # print(video_items)
-    print(dummy_data_list)
+    
     watchlist_videos= WatchList.objects.filter(user=request.user)
     videos_id_list=[]
     for video in watchlist_videos:
@@ -130,7 +129,7 @@ def home(request):
 
 def video_view(request):
     
-    youtube = build('youtube', 'v3', developerKey=api_key_3)
+    youtube = build('youtube', 'v3', developerKey=api_key_4)
     if request.method == 'POST':
         video_description= request.POST.get('video_description')
         video_title= request.POST.get('video_title')
@@ -195,7 +194,7 @@ def delete_watchlist_video(request):
 
 
 def channel_home_view(request):
-    youtube = build('youtube', 'v3', developerKey=api_key_3)
+    youtube = build('youtube', 'v3', developerKey=api_key_4)
     if request.method == 'POST':
         channel_id= request.POST.get('channel_id_home')
         print('*************** CHannel ID****************', channel_id)
@@ -215,6 +214,10 @@ def channel_home_view(request):
             part='snippet, statistics',
             id=channel_id 
         )
+        watchlist_videos= WatchList.objects.filter(user=request.user)
+        videos_id_list=[]
+        for video in watchlist_videos:
+            videos_id_list.append(video.video_id)
         response_channel_snippet=request_channel_snippet.execute()
         channel_snippet_items= response_channel_snippet['items']
         channel_snippet_item= channel_snippet_items[0]
@@ -224,7 +227,7 @@ def channel_home_view(request):
         video_reponse= video_request.execute()
         pl_items= response['items']
         video_items= video_reponse['items']
-        context= {'pl_items': pl_items, 'video_items': video_items, 'channel_item': channel_snippet_item}
+        context= {'pl_items': pl_items, 'video_items': video_items, 'channel_item': channel_snippet_item, 'watchlist_videos': videos_id_list}
         print('Playlist ___', video_reponse)
         return render(request, 'youtube/channel_home.html', context)
 
