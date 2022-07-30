@@ -17,6 +17,7 @@ api_key= 'AIzaSyAzaAIFiU2QKcD4sqC47j-I9-0fAk3awHw'
 api_key_2='AIzaSyAo9njxj8OJpWshmpCyamYf9GJXN-kIi64'
 api_key_3='AIzaSyBztkmRfxkYWS9QCtS9XD8r6clecRBVK2s'
 api_key_4='AIzaSyA4Mt5QJqtcTJ77BHIeFAj12M6s5mSUiFQ'
+api_key_5='AIzaSyA6aQiZykCZBYzGheYaKYdJYPKUsAQrrCs'
 # Create your views here.
 def register(request):
     if request.method== 'POST':
@@ -65,7 +66,7 @@ def home(request):
 
     # api_key = '#YOURAPIKEY'
 
-    youtube = build('youtube', 'v3', developerKey=api_key_4)
+    youtube = build('youtube', 'v3', developerKey=api_key_5)
 
     # request1 = youtube.channels().list(
     #         part='contentDetails',
@@ -129,7 +130,7 @@ def home(request):
 
 def video_view(request):
     
-    youtube = build('youtube', 'v3', developerKey=api_key_4)
+    youtube = build('youtube', 'v3', developerKey=api_key_5)
     if request.method == 'POST':
         video_description= request.POST.get('video_description')
         video_title= request.POST.get('video_title')
@@ -194,7 +195,7 @@ def delete_watchlist_video(request):
 
 
 def channel_home_view(request):
-    youtube = build('youtube', 'v3', developerKey=api_key_4)
+    youtube = build('youtube', 'v3', developerKey=api_key_5)
     if request.method == 'POST':
         channel_id= request.POST.get('channel_id_home')
         print('*************** CHannel ID****************', channel_id)
