@@ -1,4 +1,5 @@
 from multiprocessing import context
+from unicodedata import category
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import login, authenticate, logout
@@ -14,6 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 # Youtube API Key
 api_key= 'AIzaSyAzaAIFiU2QKcD4sqC47j-I9-0fAk3awHw'
 api_key_2='AIzaSyAo9njxj8OJpWshmpCyamYf9GJXN-kIi64'
+api_key_3='AIzaSyBztkmRfxkYWS9QCtS9XD8r6clecRBVK2s'
 # Create your views here.
 def register(request):
     if request.method== 'POST':
@@ -62,7 +64,7 @@ def home(request):
 
     # api_key = '#YOURAPIKEY'
 
-    youtube = build('youtube', 'v3', developerKey=api_key_2)
+    youtube = build('youtube', 'v3', developerKey=api_key_3)
 
     request1 = youtube.channels().list(
             part='contentDetails',
@@ -90,7 +92,7 @@ def home(request):
     all_keywords= Keyword.objects.all()
     keyword_var=''
     data_list= []
-    
+    dummy_data_list=[]
     for keyword in all_keywords:
         keyword_var= keyword.keyword
      
@@ -106,23 +108,29 @@ def home(request):
         list=[]
         video_response = video_request.execute()
         video_items= video_response['items']
-        print(keyword_var,video_items)
-        video_item= video_items[0]
+        # print(keyword_var,video_items)
+        video_item= video_items
+        video_category= keyword.category.category
+        temp={'category':video_category}
+        video_item.append(temp)
+        dummy_data_list.append(video_item)
         data_list= data_list+video_items
     # print(video_items)
-    # print(data_list)
+    print(dummy_data_list)
     watchlist_videos= WatchList.objects.filter(user=request.user)
     videos_id_list=[]
     for video in watchlist_videos:
         videos_id_list.append(video.video_id)
+
+    categories= Category.objects.all
     # print(video_response)
-    context= {'data': data_list, 'watchlist_videos': videos_id_list}
+    context= {'data': data_list, 'watchlist_videos': videos_id_list, 'categories':categories}
     return render(request, 'youtube/home.html', context)
 
 
 def video_view(request):
     
-    youtube = build('youtube', 'v3', developerKey=api_key_2)
+    youtube = build('youtube', 'v3', developerKey=api_key_3)
     if request.method == 'POST':
         video_description= request.POST.get('video_description')
         video_title= request.POST.get('video_title')
@@ -187,7 +195,7 @@ def delete_watchlist_video(request):
 
 
 def channel_home_view(request):
-    youtube = build('youtube', 'v3', developerKey=api_key_2)
+    youtube = build('youtube', 'v3', developerKey=api_key_3)
     if request.method == 'POST':
         channel_id= request.POST.get('channel_id_home')
         print('*************** CHannel ID****************', channel_id)
@@ -219,3 +227,8 @@ def channel_home_view(request):
         context= {'pl_items': pl_items, 'video_items': video_items, 'channel_item': channel_snippet_item}
         print('Playlist ___', video_reponse)
         return render(request, 'youtube/channel_home.html', context)
+
+
+
+def test(request):
+    return render(request, 'youtube/home_2.html')
