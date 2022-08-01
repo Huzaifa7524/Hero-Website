@@ -10,6 +10,8 @@ urlpatterns = [
     path('watchlist/', views.watch_list_view, name='watchlist'),
     path('deletewatchlist/', views.delete_watchlist_video, name='deletewatchlist'),
     path('channelhome/', views.channel_home_view, name='channelhome'),
+    path('search/', views.search_view, name='search'),
+
 
     path('test/', views.test, name='test'),
     

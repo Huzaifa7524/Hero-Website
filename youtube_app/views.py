@@ -97,12 +97,14 @@ def home(request):
     dummy_data_list=[]
     for keyword in all_keywords:
         keyword_var= keyword.keyword
-     
+        catgegory_var=keyword.category.category
+        search_var= keyword_var+','+catgegory_var
+        print('*************search_var', search_var)     
         video_request = youtube.search().list(
             part='snippet',
             type='video',
             # q='Athletes,Football, Volleyball',
-            q=keyword_var,
+            q=search_var,
             maxResults=15,
             order= 'date'
             
@@ -233,6 +235,37 @@ def channel_home_view(request):
         return render(request, 'youtube/channel_home.html', context)
 
 
+def search_view(request):
+    youtube = build('youtube', 'v3', developerKey=api_key_5)
+    if request.method== 'POST':
+        search_keyword= request.POST.get('search_keyword')
+        keyword_obj= Keyword.objects.filter(keyword__icontains=search_keyword)
+        if keyword_obj or keyword_obj != "" or keyword_obj is not None:
+            keyword= keyword_obj[0]
+            keyword_var= keyword.keyword
+            catgegory_var=keyword.category.category
+            search_var= keyword_var+','+catgegory_var
+            video_request = youtube.search().list(
+                    part='snippet',
+                    type='video',
+                    # q='Athletes,Football, Volleyball',
+                    q=search_var,
+                    maxResults=50,
+                    order= 'date' 
+                )
+            video_response = video_request.execute()
+            video_items= video_response['items']
+            watchlist_videos= WatchList.objects.filter(user=request.user)
+            All_keywords= Keyword.objects.all()
+            videos_id_list=[]
+            for video in watchlist_videos:
+                videos_id_list.append(video.video_id)
+            context= {'data': video_items, 'watchlist_videos': videos_id_list, 'all_keywords': All_keywords}
+            return render(request, 'youtube/search.html', context)
+        else:
+            message= 'Sorry! No Search Resault Found'
+            context= {'message', message}
+            return render(request, 'youtube/search.html', context)
 
 def test(request):
     return render(request, 'youtube/home_2.html')
