@@ -98,3 +98,13 @@
     color: black !important;
     background: white !important;
   }
+
+
+
+  /* Message Box */
+  .message_box{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    font-style: italic;
+  }

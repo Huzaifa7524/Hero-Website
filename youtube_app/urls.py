@@ -14,7 +14,10 @@ urlpatterns = [
 
     path('auto_complete/', views.auto_complete, name='auto_complete'),
 
+    # Update data in db
+    path('update_data_db/', views.update_data_db, name='update_data_db'),
 
+    # for testing purposes
     path('test/', views.test, name='test'),
     
    

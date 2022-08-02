@@ -146,7 +146,20 @@ form.search_form input[type=text] {
 
   /* Auto Complete Input */
 .autocomplete-items{
+    padding: 12px;
+    background: #b0cce3;
+    font-size: 11px;
     cursor: pointer !important;
+    margin-top: 7px !important;
+    align-items: center;
+    /* display: flex; */
+    padding-top: 50px;
+    cursor: pointer !important;
+}
+.autocomplete-subitems{
+    border-bottom: 1px solid;
+    padding-bottom: 5px;
+    padding-top: 5px;
 }
   /* ****************************** */
 @media screen and (min-width: 768px){

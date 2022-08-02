@@ -95,32 +95,9 @@ def home(request):
     # uploads=playlist['uploads']
     # print(response)
     # print(uploads)
-    all_keywords= Keyword.objects.all()
+    # all_keywords= Keyword.objects.all()
     keyword_var=''
-    data_list= []
-    dummy_data_list=[]
-    for keyword in all_keywords:
-        keyword_var= keyword.keyword
-        catgegory_var=keyword.category.category
-        search_var= keyword_var+','+catgegory_var
-        print('*************search_var', search_var)     
-        video_request = youtube.search().list(
-            part='snippet',
-            type='video',
-            # q='Athletes,Football, Volleyball',
-            q=search_var,
-            maxResults=15,
-            order= 'date'
-            
-        
-        )
-        list=[]
-        video_response = video_request.execute()
-        video_items= video_response['items']
-        keyword.data=video_items
-        keyword.save()
-        
-       
+    data_list= []   
     all_keywords_updated= Keyword.objects.all() 
     for keyword in all_keywords_updated:
         data_list=data_list+keyword.data
@@ -245,38 +222,42 @@ def channel_home_view(request):
 
 def search_view(request):
     youtube = build('youtube', 'v3', developerKey=api_key)
-    if request.method== 'POST':
-        search_keyword= request.POST.get('search_keyword')
-        keyword_obj= Keyword.objects.filter(keyword__icontains=search_keyword)
-        if keyword_obj or keyword_obj != "" or keyword_obj is not None:
-            keyword= keyword_obj[0]
-            keyword_var= keyword.keyword
-            catgegory_var=keyword.category.category
-            search_var= keyword_var+','+catgegory_var
-            video_request = youtube.search().list(
-                    part='snippet',
-                    type='video',
-                    # q='Athletes,Football, Volleyball',
-                    q=search_var,
-                    maxResults=50,
-                    order= 'date' 
-                )
-            video_response = video_request.execute()
-            video_items= video_response['items']
-            country_list=["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
-            json_list= json.dumps(country_list)
-            watchlist_videos= WatchList.objects.filter(user=request.user)
-            All_keywords= Keyword.objects.all()
-            videos_id_list=[]
-            for video in watchlist_videos:
-                videos_id_list.append(video.video_id)
-            context= {'data': video_items, 'watchlist_videos': videos_id_list, 'all_keywords': All_keywords, 'country_list': country_list}
-            return render(request, 'youtube/search.html', context)
-        else:
-            message= 'Sorry! No Search Resault Found'
-            context= {'message', message}
-            return render(request, 'youtube/search.html', context)
-
+    try:
+        if request.method== 'POST':
+            search_keyword= request.POST.get('search_keyword')
+            keyword_obj= Keyword.objects.filter(keyword__icontains=search_keyword)
+            if (keyword_obj.exists()):
+                keyword= keyword_obj[0]
+                keyword_var= keyword.keyword
+                catgegory_var=keyword.category.category
+                search_var= keyword_var+','+catgegory_var
+                video_request = youtube.search().list(
+                        part='snippet',
+                        type='video',
+                        # q='Athletes,Football, Volleyball',
+                        q=search_var,
+                        maxResults=50,
+                        order= 'date' 
+                    )
+                video_response = video_request.execute()
+                video_items= video_response['items']
+                country_list=["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+                json_list= json.dumps(country_list)
+                watchlist_videos= WatchList.objects.filter(user=request.user)
+                All_keywords= Keyword.objects.all()
+                videos_id_list=[]
+                for video in watchlist_videos:
+                    videos_id_list.append(video.video_id)
+                context= {'data': video_items, 'watchlist_videos': videos_id_list, 'all_keywords': All_keywords, 'country_list': country_list}
+                return render(request, 'youtube/search.html', context)
+            else:
+                message= 'Sorry! No Search Result Found'
+                context= {'message': message}
+                return render(request, 'youtube/search.html', context)
+    except:
+        message= 'Sorry! No Search Result Found'
+        context= {'data': "",'message': message}
+        return render(request, 'youtube/search.html', context)
 def auto_complete(request):
     
     All_keywords= Keyword.objects.all()
@@ -317,3 +298,34 @@ def test(request):
 
     return HttpResponse(list)
 
+
+
+# Update data of the site in the database every 24 hour 
+
+def update_data_db(request):
+    all_keywords= Keyword.objects.all()
+    keyword_var=''
+    data_list= []
+    dummy_data_list=[]
+    for keyword in all_keywords:
+        keyword_var= keyword.keyword
+        catgegory_var=keyword.category.category
+        search_var= keyword_var+','+catgegory_var
+        print('*************search_var', search_var)     
+        video_request = youtube.search().list(
+            part='snippet',
+            type='video',
+            # q='Athletes,Football, Volleyball',
+            q=search_var,
+            maxResults=15,
+            order= 'date'
+            
+        
+        )
+        list=[]
+        video_response = video_request.execute()
+        video_items= video_response['items']
+        keyword.data=video_items
+        keyword.save()
+    return redirect('/home')
+        
