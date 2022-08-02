@@ -20,3 +20,4 @@ class KeywordAdmin(ImportExportModelAdmin):
 admin.site.register(WatchList, WatchListAdmin)
 admin.site.register(Category)
 admin.site.register(Keyword, KeywordAdmin)
+admin.site.register(AllData)

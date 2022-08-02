@@ -21,7 +21,7 @@ api_key_3='AIzaSyBztkmRfxkYWS9QCtS9XD8r6clecRBVK2s'
 api_key_4='AIzaSyA4Mt5QJqtcTJ77BHIeFAj12M6s5mSUiFQ'
 api_key_5='AIzaSyA6aQiZykCZBYzGheYaKYdJYPKUsAQrrCs'
 
-youtube = build('youtube', 'v3', developerKey=api_key_2)
+youtube = build('youtube', 'v3', developerKey=api_key_4)
 # Create your views here.
 def register(request):
     if request.method== 'POST':
@@ -67,7 +67,23 @@ def logoutUser(request):
 
 
 def home(request):
+    data_list=[]
+    all_data_obj=AllData.objects.get(id=1)
+    data_list=data_list+all_data_obj.data
+    # data_list= data_list+video_items
+    # print(video_items)
+    
+    watchlist_videos= WatchList.objects.filter(user=request.user)
+    videos_id_list=[]
+    for video in watchlist_videos:
+        videos_id_list.append(video.video_id)
 
+    categories= Category.objects.all
+    # print(video_response)
+    context= {'data': data_list, 'watchlist_videos': videos_id_list, 'categories':categories}
+    return render(request, 'youtube/home.html', context)
+
+def dummy_home(request):
     # api_key = '#YOURAPIKEY'
 
    
@@ -113,7 +129,6 @@ def home(request):
     # print(video_response)
     context= {'data': data_list, 'watchlist_videos': videos_id_list, 'categories':categories}
     return render(request, 'youtube/home.html', context)
-
 
 def video_view(request):
     
@@ -325,7 +340,11 @@ def update_data_db(request):
         list=[]
         video_response = video_request.execute()
         video_items= video_response['items']
+        data_list = data_list+video_items
+        all_data_obj= AllData.objects.get(id=1)
+        all_data_obj.data=data_list
+        all_data_obj.save()
         keyword.data=video_items
         keyword.save()
-    return redirect('/home')
+    return redirect('/watchlist')
         

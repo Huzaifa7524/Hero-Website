@@ -21,3 +21,6 @@ class Keyword(models.Model):
     category= models.ForeignKey(Category, on_delete=models.CASCADE)
     keyword= models.CharField(max_length=50)
     data=models.JSONField(null= True, blank=True)
+
+class AllData(models.Model):
+    data= models.JSONField(null=True, blank=True)
