@@ -17,6 +17,9 @@ urlpatterns = [
     # Update data in db
     path('update_data_db/', views.update_data_db, name='update_data_db'),
 
+    # Update data in home page AJAX
+    path('update_data_home_ajax/', views.home_data_ajax, name='update_data_home_ajax'),
+
     # for testing purposes
     path('test/', views.test, name='test'),
     

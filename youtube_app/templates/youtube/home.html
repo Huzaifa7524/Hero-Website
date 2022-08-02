@@ -28,7 +28,9 @@
 {% for i in categories %}
 <div class="main_container" >
     <h1 class="categories_title"> {{i.category}}</h1>
-    <div class="videos_main_div" >
+    <div class="videos_main_div {{i.category}}" >
+        <input type="text" hidden name="page_number" id="page_number" value="{{keywords_page_info.number}}">
+        <input type="text" hidden name="category_name" id="category_name" value="{{i.category}}">
     
         {% for dat in data %}
            
@@ -110,7 +112,55 @@ if ($('.videos_main_div').children().length == 0){
     console.log('Empty')
     $(this).siblings('h1').remove()
   //do something
-}  
+} 
+
+
+
+// Scrolling
+var lastPos = 0;
+$('.videos_main_div').scroll(function() {
+    var currPos = $('.videos_main_div').scrollLeft();
+
+    if (lastPos < currPos) {
+        console.log('Right', lastPos)
+        console.log('width', $(this).outerWidth())
+        var $scrollWidth = $('.videos_main_div')[0].scrollWidth; 
+        console.log('scroll width',$scrollWidth)
+        var diff = Math.abs( lastPos - $scrollWidth );
+        if (diff < 1400 && diff >= 1300){
+
+            console.log('end')
+            
+                    var $this = $(this);
+                    $.ajax({ 
+                        method: "POST",
+                        url: `/update_data_home_ajax/`,
+                        data: {
+                        'category_name': $this.children('#category_name').val(),
+                        'page_number': $this.children('#page_number').val(),
+                       
+                        
+                    },
+                        success:function(response){
+                            console.log(response)
+                            
+                            
+                            
+                    
+                        },
+                        error:function(){
+                            console.log('save url is not working')
+                        }
+                        });
+             
+        }
+    }
+    if (lastPos > currPos) {
+     console.log('Left', lastPos)
+    }
+
+    lastPos = currPos;
+});
 </script>
 {% endblock %}
 

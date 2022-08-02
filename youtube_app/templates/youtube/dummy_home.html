@@ -2,7 +2,7 @@
 {% extends 'youtube/base.html' %}
 {% load static %}
 {% load VideoCategory %}
-{% block title %} Search Result{% endblock %}
+{% block title %} youtube-home{% endblock %}
 {% block extrastylesheet %}
 <link rel="stylesheet" href="{% static 'youtube/css/home.css' %}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
@@ -25,14 +25,14 @@
 <div class="upper_block_main">
     <h1></h1>
 </div>
-{%  if data or data != "" or data is not None %}
+{% for i in categories %}
 <div class="main_container" >
-    <!-- <h1 class="categories_title"> {{i.category}}</h1> -->
-    <div class="videos_main_div" >
+    <h1 class="categories_title"> {{i.category}}</h1>
+    <div class="videos_main_div {{i.category}}" >
     
         {% for dat in data %}
            
-         
+         {% if dat.snippet.title|VideoCategory == i.category or dat.snippet.channelTitle|VideoCategory == i.category %}   
         <div class="video_box">
             <div class="video_box_upper">
                 <form action="{% url 'video_player' %}" method="post">
@@ -88,35 +88,54 @@
     
         </div>
     
-       
+        {% endif %}
        
         {% endfor %}
     </div>
 </div>
-{% else %}
-<div class="message_box">
-    <h1>{{message}}</h1>
-</div>
-{% endif %}
-
+{% endfor %}
 {% endblock %}
 {% block extrascript %}
 <script src="https://unpkg.com/boxicons@2.1.2/dist/boxicons.js"></script>
-
 <script src="{% static 'youtube/js/auto_complete.js' %}"></script>
 <script src="{% static 'youtube/js/save_video.js' %}"></script>
+
 <script>
     $(".video_box_upper").click(function(){
   $(this).children('form').submit()
 });
 
+
 if ($('.videos_main_div').children().length == 0){
     console.log('Empty')
     $(this).siblings('h1').remove()
   //do something
-}  
+} 
 
 
+
+// Scrolling
+var lastPos = 0;
+$('.videos_main_div').scroll(function() {
+    var currPos = $('.videos_main_div').scrollLeft();
+
+    if (lastPos < currPos) {
+        console.log('Right', lastPos)
+        console.log('width', $(this).outerWidth())
+        var $scrollWidth = $('.videos_main_div')[0].scrollWidth; 
+        console.log('scroll width',$scrollWidth)
+        var diff = Math.abs( lastPos - $scrollWidth );
+        if (diff < 1400 && diff >= 1300){
+
+            console.log('end')
+        }
+    }
+    if (lastPos > currPos) {
+     console.log('Left', lastPos)
+    }
+
+    lastPos = currPos;
+});
 </script>
 {% endblock %}
 

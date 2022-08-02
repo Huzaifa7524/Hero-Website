@@ -12,6 +12,7 @@ import datetime
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
 
 # Youtube API Key
@@ -68,8 +69,30 @@ def logoutUser(request):
 
 def home(request):
     data_list=[]
-    all_data_obj=AllData.objects.get(id=1)
-    data_list=data_list+all_data_obj.data
+    paginator_list=[]
+    paginator_list_2=[]
+    # all_data_obj=AllData.objects.get(id=1)
+    categories= Category.objects.all()
+    index=0
+    for category in categories:
+        keyword_obj= Keyword.objects.filter(category__category=category)
+        
+        paginator = Paginator(keyword_obj, 2)
+        page = request.GET.get('page', 1)
+        keywords = paginator.get_page(page)
+        for key in keywords:
+            paginator_list = paginator_list+ key.data
+        obj_1=keyword_obj[0]
+        # obj_2=keyword_obj[1]
+        # print('keyword obj',obj_2)
+       
+        data_list= data_list+obj_1.data
+        # data_list= data_list+obj_2.data
+        
+        index+=1
+    print('Paginator', paginator_list)
+    # all_data_obj=Keyword.objects.get(id=1)
+    # data_list=data_list+all_data_obj.data
     # data_list= data_list+video_items
     # print(video_items)
     
@@ -78,10 +101,26 @@ def home(request):
     for video in watchlist_videos:
         videos_id_list.append(video.video_id)
 
-    categories= Category.objects.all
+    
     # print(video_response)
-    context= {'data': data_list, 'watchlist_videos': videos_id_list, 'categories':categories}
+    context= {'data': paginator_list, 'watchlist_videos': videos_id_list, 'categories':categories, 'keywords_page_info':keywords}
     return render(request, 'youtube/home.html', context)
+
+# AJAX Call to get data of remaining Objects
+def home_data_ajax(request):
+    if request.method == "POST":
+        page_number= request.POST.get('page_number') 
+        next_page= int(page_number)+1
+        category_name= request.POST.get('category_name') 
+        keyword_obj= Keyword.objects.filter(category__category__icontains=category_name )
+        
+        paginator = Paginator(keyword_obj, 2)
+        page = request.GET.get('page', next_page)
+        keywords = paginator.get_page(page)
+        for key in keywords:
+            paginator_list = paginator_list+ key.data
+        return JsonResponse({'data': paginator_list,})
+        
 
 def dummy_home(request):
     # api_key = '#YOURAPIKEY'
