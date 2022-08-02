@@ -20,3 +20,4 @@ class Category(models.Model):
 class Keyword(models.Model):
     category= models.ForeignKey(Category, on_delete=models.CASCADE)
     keyword= models.CharField(max_length=50)
+    data=models.JSONField(null= True, blank=True)

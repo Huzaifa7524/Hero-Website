@@ -98,6 +98,8 @@
 {% block extrascript %}
 <script src="https://unpkg.com/boxicons@2.1.2/dist/boxicons.js"></script>
 
+<script src="{% static 'youtube/js/auto_complete.js' %}"></script>
+
 <script>
     $(".video_box_upper").click(function(){
   $(this).children('form').submit()
@@ -136,6 +138,7 @@ $(".save_button").click(function(){
           }
         });
 });
+
 $(".unsave_button").click(function(){
     var $this = $(this);
     $.ajax({ 

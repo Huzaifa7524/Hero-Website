@@ -12,6 +12,8 @@ urlpatterns = [
     path('channelhome/', views.channel_home_view, name='channelhome'),
     path('search/', views.search_view, name='search'),
 
+    path('auto_complete/', views.auto_complete, name='auto_complete'),
+
 
     path('test/', views.test, name='test'),
     

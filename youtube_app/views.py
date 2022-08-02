@@ -10,6 +10,8 @@ from googleapiclient.discovery import build
 from django.contrib.auth.models import User
 import datetime
 from django.views.decorators.csrf import csrf_exempt
+import json
+from django.http import JsonResponse
 
 
 # Youtube API Key
@@ -18,6 +20,8 @@ api_key_2='AIzaSyAo9njxj8OJpWshmpCyamYf9GJXN-kIi64'
 api_key_3='AIzaSyBztkmRfxkYWS9QCtS9XD8r6clecRBVK2s'
 api_key_4='AIzaSyA4Mt5QJqtcTJ77BHIeFAj12M6s5mSUiFQ'
 api_key_5='AIzaSyA6aQiZykCZBYzGheYaKYdJYPKUsAQrrCs'
+
+youtube = build('youtube', 'v3', developerKey=api_key)
 # Create your views here.
 def register(request):
     if request.method== 'POST':
@@ -66,7 +70,7 @@ def home(request):
 
     # api_key = '#YOURAPIKEY'
 
-    youtube = build('youtube', 'v3', developerKey=api_key_5)
+    youtube = build('youtube', 'v3', developerKey=api_key)
 
     # request1 = youtube.channels().list(
     #         part='contentDetails',
@@ -113,10 +117,14 @@ def home(request):
         list=[]
         video_response = video_request.execute()
         video_items= video_response['items']
+        keyword.data=video_items
+        keyword.save()
         
        
-        
-        data_list= data_list+video_items
+    all_keywords_updated= Keyword.objects.all() 
+    for keyword in all_keywords_updated:
+        data_list=data_list+keyword.data
+        # data_list= data_list+video_items
     # print(video_items)
     
     watchlist_videos= WatchList.objects.filter(user=request.user)
@@ -132,7 +140,7 @@ def home(request):
 
 def video_view(request):
     
-    youtube = build('youtube', 'v3', developerKey=api_key_5)
+    youtube = build('youtube', 'v3', developerKey=api_key)
     if request.method == 'POST':
         video_description= request.POST.get('video_description')
         video_title= request.POST.get('video_title')
@@ -197,7 +205,7 @@ def delete_watchlist_video(request):
 
 
 def channel_home_view(request):
-    youtube = build('youtube', 'v3', developerKey=api_key_5)
+    youtube = build('youtube', 'v3', developerKey=api_key)
     if request.method == 'POST':
         channel_id= request.POST.get('channel_id_home')
         print('*************** CHannel ID****************', channel_id)
@@ -236,7 +244,7 @@ def channel_home_view(request):
 
 
 def search_view(request):
-    youtube = build('youtube', 'v3', developerKey=api_key_5)
+    youtube = build('youtube', 'v3', developerKey=api_key)
     if request.method== 'POST':
         search_keyword= request.POST.get('search_keyword')
         keyword_obj= Keyword.objects.filter(keyword__icontains=search_keyword)
@@ -255,17 +263,57 @@ def search_view(request):
                 )
             video_response = video_request.execute()
             video_items= video_response['items']
+            country_list=["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+            json_list= json.dumps(country_list)
             watchlist_videos= WatchList.objects.filter(user=request.user)
             All_keywords= Keyword.objects.all()
             videos_id_list=[]
             for video in watchlist_videos:
                 videos_id_list.append(video.video_id)
-            context= {'data': video_items, 'watchlist_videos': videos_id_list, 'all_keywords': All_keywords}
+            context= {'data': video_items, 'watchlist_videos': videos_id_list, 'all_keywords': All_keywords, 'country_list': country_list}
             return render(request, 'youtube/search.html', context)
         else:
             message= 'Sorry! No Search Resault Found'
             context= {'message', message}
             return render(request, 'youtube/search.html', context)
 
+def auto_complete(request):
+    
+    All_keywords= Keyword.objects.all()
+    keywords_list=[]
+    for keyword in All_keywords:
+        keywords_list.append(keyword.keyword)
+    print(keywords_list)   
+    return JsonResponse({'data': keywords_list,})
+    # return HttpResponse(json_list)
+
+
 def test(request):
-    return render(request, 'youtube/home_2.html')
+    video_request = youtube.search().list(
+            part='snippet',
+            type='video',
+            # q='Athletes,Football, Volleyball',
+            q='Clydesdale Media',
+            maxResults=15,
+            order= 'date'
+            
+        
+        )
+    
+    list=[]
+    video_response = video_request.execute()
+    video_items= video_response['items']
+    sevan_podcast= Keyword.objects.filter(keyword='Clydesdale Media')
+    sevan_podcast_obj=sevan_podcast[0]
+    sevan_podcast_obj.data=video_items
+    sevan_podcast_obj.save()
+    list=[]
+    d1=Keyword.objects.filter(keyword='Clydesdale Media')
+    d2=Keyword.objects.filter(keyword='Sevan Podcast')
+    d1_o=d1[0]
+    d2_o=d2[0]
+    list=d1_o.data + d2_o.data
+    print(list)
+
+    return HttpResponse(list)
+
