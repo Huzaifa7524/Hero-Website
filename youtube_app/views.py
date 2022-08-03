@@ -107,19 +107,25 @@ def home(request):
     return render(request, 'youtube/home.html', context)
 
 # AJAX Call to get data of remaining Objects
+@csrf_exempt
 def home_data_ajax(request):
     if request.method == "POST":
+        print('post req')
         page_number= request.POST.get('page_number') 
         next_page= int(page_number)+1
         category_name= request.POST.get('category_name') 
-        keyword_obj= Keyword.objects.filter(category__category__icontains=category_name )
+        print('page_number',page_number)
+        print('next_page',next_page)
+        print('category_name',category_name)
+        keyword_obj= Keyword.objects.filter(category__category=category_name )
         
         paginator = Paginator(keyword_obj, 2)
         page = request.GET.get('page', next_page)
         keywords = paginator.get_page(page)
+        paginator_list=[]
         for key in keywords:
             paginator_list = paginator_list+ key.data
-        return JsonResponse({'data': paginator_list,})
+        return JsonResponse({'data': paginator_list, 'page_number': next_page})
         
 
 def dummy_home(request):
