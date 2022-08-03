@@ -22,7 +22,7 @@ api_key_3='AIzaSyBztkmRfxkYWS9QCtS9XD8r6clecRBVK2s'
 api_key_4='AIzaSyA4Mt5QJqtcTJ77BHIeFAj12M6s5mSUiFQ'
 api_key_5='AIzaSyA6aQiZykCZBYzGheYaKYdJYPKUsAQrrCs'
 
-youtube = build('youtube', 'v3', developerKey=api_key_4)
+youtube = build('youtube', 'v3', developerKey=api_key)
 # Create your views here.
 def register(request):
     if request.method== 'POST':
