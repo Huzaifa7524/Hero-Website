@@ -75,21 +75,24 @@ def home(request):
     categories= Category.objects.all()
     index=0
     for category in categories:
-        keyword_obj= Keyword.objects.filter(category__category=category)
+        try:
+            keyword_obj= Keyword.objects.filter(category__category=category)
+            
+            paginator = Paginator(keyword_obj, 2)
+            page = request.GET.get('page', 1)
+            keywords = paginator.get_page(page)
+            for key in keywords:
+                paginator_list = paginator_list+ key.data
+            obj_1=keyword_obj[0]
+            # obj_2=keyword_obj[1]
+            # print('keyword obj',obj_2)
         
-        paginator = Paginator(keyword_obj, 2)
-        page = request.GET.get('page', 1)
-        keywords = paginator.get_page(page)
-        for key in keywords:
-            paginator_list = paginator_list+ key.data
-        obj_1=keyword_obj[0]
-        # obj_2=keyword_obj[1]
-        # print('keyword obj',obj_2)
-       
-        data_list= data_list+obj_1.data
-        # data_list= data_list+obj_2.data
-        
-        index+=1
+            data_list= data_list+obj_1.data
+            # data_list= data_list+obj_2.data
+            
+            index+=1
+        except:
+            pass
     print('Paginator', paginator_list)
     # all_data_obj=Keyword.objects.get(id=1)
     # data_list=data_list+all_data_obj.data
