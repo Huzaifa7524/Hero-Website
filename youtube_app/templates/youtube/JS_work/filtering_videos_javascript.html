@@ -1,6 +1,12 @@
 <script>
+    // closeing the drop down when clicked outside
+//     $(document).click(function(){
+//   $("#filter_dropdown_block").removeClass('show_filter_dropdown');
+// });
     $(".filter_dropdown_input").click(function(){
+
     var $this = $(this);
+    $this.parent('div').removeClass('show_filter_dropdown')
     var category_div=$this.siblings('#filter_category').val()
     $.ajax({ 
           method: "POST",

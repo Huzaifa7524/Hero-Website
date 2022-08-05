@@ -478,7 +478,7 @@ def test(request):
 
     print(x)
 
-    return HttpResponse(x)
+    return render(request, 'youtube/personality_follow.html', context)
 
 
 # ********************** Functions To use for different Operations
