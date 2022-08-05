@@ -112,6 +112,15 @@ def home(request):
 # AJAX Call to get data of remaining Objects
 @csrf_exempt
 def home_data_ajax(request):
+    try:
+            videos_id_list_watchlist=[]
+            watchlist_videos= WatchList.objects.filter(user=request.user)
+            
+            for video in watchlist_videos:
+                videos_id_list_watchlist.append(video.video_id)
+    except Exception as e:
+            print(e)
+            pass
     if request.method == "POST":
         print('post req')
         page_number= request.POST.get('page_number') 
@@ -128,7 +137,7 @@ def home_data_ajax(request):
         paginator_list=[]
         for key in keywords:
             paginator_list = paginator_list+ key.data
-        return JsonResponse({'data': paginator_list, 'page_number': next_page})
+        return JsonResponse({'data': paginator_list, 'page_number': next_page,'videos_id_list':videos_id_list_watchlist})
         
 
 def dummy_home(request):
@@ -371,6 +380,15 @@ def update_data_db(request):
         
 @csrf_exempt
 def filter_videos_home(request):
+    try:
+            videos_id_list_watchlist=[]
+            watchlist_videos= WatchList.objects.filter(user=request.user)
+            
+            for video in watchlist_videos:
+                videos_id_list_watchlist.append(video.video_id)
+    except Exception as e:
+            print(e)
+            pass
     if request.method == 'POST':
         filter_category= request.POST.get('filter_category')
         filter= request.POST.get('filter')
@@ -424,10 +442,11 @@ def filter_videos_home(request):
             if item['statistics'].__contains__(str(filter_type)):
                 updated_data_list.append(item)
                 likes= item['statistics'][str(filter_type)]
-                print('likes', type(likes), likes)
+                # print('likes', type(likes), likes)
         sorted_list=sorted(updated_data_list, key=lambda x: int(x['statistics'][str(filter_type)]), reverse=True)
-        print(sorted_list)   
-    return JsonResponse({'data': sorted_list, })
+        # print(sorted_list)  
+            
+    return JsonResponse({'data': sorted_list, 'videos_id_list':videos_id_list_watchlist})
 
 
 def test(request):
