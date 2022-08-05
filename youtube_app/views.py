@@ -22,7 +22,7 @@ api_key_3='AIzaSyBztkmRfxkYWS9QCtS9XD8r6clecRBVK2s'
 api_key_4='AIzaSyA4Mt5QJqtcTJ77BHIeFAj12M6s5mSUiFQ'
 api_key_5='AIzaSyA6aQiZykCZBYzGheYaKYdJYPKUsAQrrCs'
 
-youtube = build('youtube', 'v3', developerKey=api_key)
+youtube = build('youtube', 'v3', developerKey=api_key_3)
 # Create your views here.
 def register(request):
     if request.method== 'POST':
@@ -374,8 +374,10 @@ def filter_videos_home(request):
     if request.method == 'POST':
         filter_category= request.POST.get('filter_category')
         filter= request.POST.get('filter')
+        filter_type=type_of_filter(filter)
         print('category', filter_category)
         print('filter',filter)
+        print('type_of_filter(filter)', type_of_filter(filter))
         All_keywords= Keyword.objects.filter(category__category = filter_category)
         keywords_data_list= []
         videos_api_data=[]
@@ -415,14 +417,17 @@ def filter_videos_home(request):
         # response = request.execute()
         # items= response['items']
         # print('videos', videos_api_data)
+        updated_data_list= []
         for item in videos_api_data:
             id=item['id']
             print('id',id)
-            likes= item['statistics']['likeCount']
-            print('likes', type(likes), likes)
-        sorted_l=sorted(videos_api_data, key=lambda x: int(x['statistics']['commentCount']), reverse=True)
-        print(sorted_l)   
-    return HttpResponse('success')
+            if item['statistics'].__contains__(str(filter_type)):
+                updated_data_list.append(item)
+                likes= item['statistics'][str(filter_type)]
+                print('likes', type(likes), likes)
+        sorted_list=sorted(updated_data_list, key=lambda x: int(x['statistics'][str(filter_type)]), reverse=True)
+        print(sorted_list)   
+    return JsonResponse({'data': sorted_list, })
 
 
 def test(request):
@@ -456,6 +461,8 @@ def test(request):
 
     return HttpResponse(x)
 
+
+# ********************** Functions To use for different Operations
 # Yield successive n-sized
 # chunks from l.
 def divide_chunks(l, n):
@@ -463,3 +470,14 @@ def divide_chunks(l, n):
     # looping till length l
     for i in range(0, len(l), n):
         yield l[i:i + n]
+
+def type_of_filter(filter_key):
+    if filter_key== 'Like' or filter_key== 'like' or filter_key== 'Likes' or filter_key== 'likes':
+        returned_value='likeCount'
+        return returned_value
+    if filter_key== 'Comment' or filter_key== 'comment' or filter_key== 'Comments' or filter_key== 'comments':
+        returned_value='commentCount'
+        return returned_value
+    if filter_key== 'View Count' or filter_key== 'view count':
+        returned_value='viewCount'
+        return returned_value

@@ -1,4 +1,5 @@
-$(".filter_dropdown_input").click(function(){
+<script>
+    $(".filter_dropdown_input").click(function(){
     var $this = $(this);
     var category_div=$this.siblings('#filter_category').val()
     $.ajax({ 
@@ -38,3 +39,4 @@ $(".filter_dropdown_input").click(function(){
           }
         });
 });
+</script>
