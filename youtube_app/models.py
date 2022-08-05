@@ -24,3 +24,6 @@ class Keyword(models.Model):
 
 class AllData(models.Model):
     data= models.JSONField(null=True, blank=True)
+
+
+

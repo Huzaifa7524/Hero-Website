@@ -1,6 +1,11 @@
 .main_container{
   margin-top: 38px;
 }
+.main_container_header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .videos_main_div{
   display: -webkit-box;
   overflow-x: scroll;

@@ -1,3 +1,13 @@
+.channel_header_container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 90px;
+  margin-bottom: 19px;
+}
+
+
+
 .playlist_box{
     width: 16%;
     margin: 8px;
@@ -21,3 +31,17 @@
   .channel_title{
     font-size: 30px !important;
   }
+
+
+.channel_subscribe_button, .channel_unsubscribe_button{
+  font-weight: 500;
+    /* background: #f44336; */
+    background: #cc0000;
+    border: none;
+    padding: 8px;
+    color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    /* letter-spacing: 0.5px; */
+    font-size: 13px;
+}

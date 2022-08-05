@@ -5,10 +5,14 @@
 {% block title %} youtube-home{% endblock %}
 {% block extrastylesheet %}
 <link rel="stylesheet" href="{% static 'youtube/css/home.css' %}">
+<link rel="stylesheet" href="{% static 'youtube/css/parts_css/filter_dropdown.css' %}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 <style>
     .hidden{
         display: none;
+    }
+    .show{
+        display: block;
     }
 </style>
 {% endblock %}
@@ -27,7 +31,22 @@
 </div>
 {% for i in categories %}
 <div class="main_container" >
-    <h1 class="categories_title"> {{i.category}}</h1>
+    <div class="main_container_header">
+        <div><h1 class="categories_title"> {{i.category}}</h1></div>
+        <div>
+            <div class="dropdown">
+                <!-- <button onclick="filter_dropdown(this)" class="dropbtn"><i class='bx bx-filter bx-md nav_icon'></i></button> -->
+                <div id="filter_dropdown_block" class="dropdown-content filter_dropdown_block">
+                    <input type="text" name="" id="filter_category" value="{{i.category}}" hidden>
+                    <a  class="filter_dropdown_input">Likes</a>
+                    <a  class="filter_dropdown_input">Comments</a>
+                    <a class="filter_dropdown_input">View Count</a>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+    
     <div class="videos_main_div {{i.category}}" >
         <input type="text" hidden name="page_number" id="page_number" value="{{keywords_page_info.number}}">
         <input type="text" hidden name="category_name" id="category_name" value="{{i.category}}">
@@ -101,6 +120,7 @@
 <script src="https://unpkg.com/boxicons@2.1.2/dist/boxicons.js"></script>
 <script src="{% static 'youtube/js/auto_complete.js' %}"></script>
 <script src="{% static 'youtube/js/save_video.js' %}"></script>
+<script src="{% static 'youtube/js/filtering_videos.js' %}"></script>
 
 <script>
     $(".video_box_upper").click(function(){
@@ -113,8 +133,23 @@ if ($('.videos_main_div').children().length == 0){
     $(this).siblings('h1').remove()
   //do something
 } 
-
-
+// ************************** Drop Down JS
+function filter_dropdown(element) {
+  $(element).siblings('div').toggleClass("show_filter_dropdown");
+}
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
 
 // Scrolling
 var lastPos = 0;

@@ -20,6 +20,9 @@ urlpatterns = [
     # Update data in home page AJAX
     path('update_data_home_ajax/', views.home_data_ajax, name='update_data_home_ajax'),
 
+    #Filter Videos in home page AJAX
+    path('filter_videos_home/', views.filter_videos_home, name='filter_videos_home'),
+
     # for testing purposes
     path('test/', views.test, name='test'),
     

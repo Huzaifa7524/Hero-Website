@@ -332,34 +332,7 @@ def auto_complete(request):
     # return HttpResponse(json_list)
 
 
-def test(request):
-    video_request = youtube.search().list(
-            part='snippet',
-            type='video',
-            # q='Athletes,Football, Volleyball',
-            q='Clydesdale Media',
-            maxResults=15,
-            order= 'date'
-            
-        
-        )
-    
-    list=[]
-    video_response = video_request.execute()
-    video_items= video_response['items']
-    sevan_podcast= Keyword.objects.filter(keyword='Clydesdale Media')
-    sevan_podcast_obj=sevan_podcast[0]
-    sevan_podcast_obj.data=video_items
-    sevan_podcast_obj.save()
-    list=[]
-    d1=Keyword.objects.filter(keyword='Clydesdale Media')
-    d2=Keyword.objects.filter(keyword='Sevan Podcast')
-    d1_o=d1[0]
-    d2_o=d2[0]
-    list=d1_o.data + d2_o.data
-    print(list)
 
-    return HttpResponse(list)
 
 
 
@@ -396,3 +369,97 @@ def update_data_db(request):
         keyword.save()
     return redirect('/watchlist')
         
+@csrf_exempt
+def filter_videos_home(request):
+    if request.method == 'POST':
+        filter_category= request.POST.get('filter_category')
+        filter= request.POST.get('filter')
+        print('category', filter_category)
+        print('filter',filter)
+        All_keywords= Keyword.objects.filter(category__category = filter_category)
+        keywords_data_list= []
+        videos_api_data=[]
+        keywords_string=""
+        for keyword in All_keywords:
+            keywords_data_list= keywords_data_list + (keyword.data)
+        video_id_list=[]
+        for data in keywords_data_list:
+            video_id=data['id']['videoId']
+
+            # print('video id', video_id)
+            # keywords_string=keywords_string+ ','+ str(video_id)
+            # print(keywords_string)
+            video_id_list.append(video_id)
+        divided_chunk_list = list(divide_chunks(video_id_list, 50))
+        for chunk in divided_chunk_list:
+            keywords_string=''
+            for val in chunk:
+                keywords_string=keywords_string+ ','+ str(val)
+                keywords_string=keywords_string.lstrip(',')
+            request = youtube.videos().list(
+                        part="statistics,snippet",
+                        id=keywords_string,
+                        maxResults=1
+                        )
+            response = request.execute()
+            items= response['items']
+            # print(items)
+            videos_api_data= videos_api_data+items
+        # keywords_string=keywords_string.lstrip(',')
+        # print(type(keywords_string))
+        # request = youtube.videos().list(
+        # part="statistics,snippet",
+        # id=keywords_string,
+        # maxResults=1
+        # )
+        # response = request.execute()
+        # items= response['items']
+        # print('videos', videos_api_data)
+        for item in videos_api_data:
+            id=item['id']
+            print('id',id)
+            likes= item['statistics']['likeCount']
+            print('likes', type(likes), likes)
+        sorted_l=sorted(videos_api_data, key=lambda x: int(x['statistics']['commentCount']), reverse=True)
+        print(sorted_l)   
+    return HttpResponse('success')
+
+
+def test(request):
+    str_1=['w9HJw2eXyqE,MeMUO_D1-pg,YjJvlhF8d5c,6vjpHJMBcsI,wEI3zqxNKbw,n2lRTW2zwNc,uacpjGQLvuE,_92PIn1wj0k,HFnPL255muo,frhuuVWC0JY,FORzH8zSrtg']
+    str_2=['w9HJw2eXyqE','MeMUO_D1-pg','YjJvlhF8d5c','6vjpHJMBcsI','wEI3zqxNKbw','n2lRTW2zwNc','uacpjGQLvuE','_92PIn1wj0k','HFnPL255muo','frhuuVWC0JY','FORzH8zSrtg']
+    
+    print((str_2))
+    n = 12
+    # x=[]
+    x = list(divide_chunks(str_2, n))
+    for chunk in x:
+        s=''
+        for val in chunk:
+            s=s+ ','+ str(val)
+            s=s.lstrip(',')
+            print(str(val))
+        print('****************',s)
+    # request = youtube.videos().list(
+    #     part="statistics,snippet",
+    #     id=str,
+    #     maxResults=1
+    # )
+    # response = request.execute()
+    # items= response['items']
+    # for item in items:
+    #     likes= item['statistics']['likeCount']
+    #     print('likes', likes)
+    # sorted_l=sorted(items, key=lambda x: x['statistics']['likeCount'])
+
+    print(x)
+
+    return HttpResponse(x)
+
+# Yield successive n-sized
+# chunks from l.
+def divide_chunks(l, n):
+     
+    # looping till length l
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
