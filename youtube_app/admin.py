@@ -9,6 +9,7 @@ from youtube_app.models import *
 class WatchListAdmin(admin.ModelAdmin):
     list_display = ('user', 'video_title')
 
+
 class KeywordResource(resources.ModelResource):
 
     class Meta:
@@ -17,7 +18,11 @@ class KeywordResource(resources.ModelResource):
 class KeywordAdmin(ImportExportModelAdmin):
     list_display = ('category', 'keyword')
 
+# class FollowPersonalityAdmin(ImportExportModelAdmin):
+#     list_display = ('user', 'keyword')
+
 admin.site.register(WatchList, WatchListAdmin)
 admin.site.register(Category)
 admin.site.register(Keyword, KeywordAdmin)
 admin.site.register(AllData)
+admin.site.register(FollowPersonality)

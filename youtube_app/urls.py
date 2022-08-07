@@ -6,9 +6,13 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('logout/', views.logoutUser, name='logout'),
     path('video_player/', views.video_view, name='video_player'),
+
+    # Watch list urls
     path('addvideotowatchlist/', views.add_to_watchlist, name='addvideotowatchlist'),
     path('watchlist/', views.watch_list_view, name='watchlist'),
     path('deletewatchlist/', views.delete_watchlist_video, name='deletewatchlist'),
+    
+
     path('channelhome/', views.channel_home_view, name='channelhome'),
     path('search/', views.search_view, name='search'),
 
@@ -23,6 +27,11 @@ urlpatterns = [
     #Filter Videos in home page AJAX
     path('filter_videos_home/', views.filter_videos_home, name='filter_videos_home'),
 
+    #Follow a personality
+    path('follow_personality_home/', views.follow_personality, name='follow_personality_home'),
+    path('follow_personality/', views.follow_personality_ajax, name='follow_personality'),
+    path('unfollow_personality/', views.unfollow_personality_ajax, name='unfollow_personality'),
+    
     # for testing purposes
     path('test/', views.test, name='test'),
     

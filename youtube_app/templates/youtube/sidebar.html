@@ -24,12 +24,12 @@
                      <a href="{% url 'home' %}" class="nav_link "> <i class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Home</span> </a> 
                      
                      <a href="{% url 'watchlist' %}" class="nav_link active"> <i class='bx bx-bookmark nav_icon'></i> <span class="nav_name">Watch Later</span> </a> 
-                     <a href="#" class="nav_link"> <i class='bx bx-like nav_icon'></i> <span class="nav_name">Follow a Personality</span> </a> 
+                     <a href="{% url 'follow_personality_home' %}" class="nav_link"> <i class='bx bx-like nav_icon'></i> <span class="nav_name">Follow a Personality</span> </a> 
                      {% else %}
                      <a href="{% url 'home' %}" class="nav_link active"> <i class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Home</span> </a> 
                      
                      <a href="{% url 'watchlist' %}" class="nav_link"> <i class='bx bx-bookmark nav_icon'></i> <span class="nav_name">Watch Later</span> </a>
-                     <a href="#" class="nav_link"> <i class='bx bx-like nav_icon'></i> <span class="nav_name">Follow a Personality</span> </a> 
+                     <a href="{% url 'follow_personality_home' %}" class="nav_link"> <i class='bx bx-like nav_icon'></i> <span class="nav_name">Follow a Personality</span> </a> 
                      {%  endif %}
                      <a href="#" class="nav_link" id="search_button"> <i class='bx bx-search nav_icon'></i> <span class="nav_name">Search</span> 
                         </a> 

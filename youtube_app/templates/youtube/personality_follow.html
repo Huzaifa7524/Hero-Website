@@ -6,6 +6,8 @@
 {% block extrastylesheet %}
 <link rel="stylesheet" href="{% static 'youtube/css/home.css' %}">
 <link rel="stylesheet" href="{% static 'youtube/css/parts_css/filter_dropdown.css' %}">
+<link rel="stylesheet" href="{% static 'youtube/css/personality_follow.css' %}">
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 <style>
     .hidden{
@@ -36,55 +38,56 @@
         
     </div>
     
-    <div class="videos_main_div {{i.category}}" >
+    <div class="" >
+      {% for keyword in all_keywords %}
+      <div class="upper_block_main">
+        <div class="personality_header">
+          <div class="personality_header_container">
+            <div class="personality_header_left">
+              <div class="personality_profile_pic">
+                <img class="personality_profile_image" src="{% static 'user/images/blank-profile-picture.png' %}" alt="{{video_title | safe}}" style="width:85px">
+              </div>
+              <div class="personality_title_container">
+                    <h1 class="personality_title">{{ keyword.keyword}}</h1>
+                    <p class="personality_category">{{ keyword.category.category }}</p>
+              </div>
+            </div>
+            <div class="personality_header_right">
+              <input type="text" name="follow_keyword" id="follow_keyword_value" value="{{ keyword.keyword }}" hidden>
+              <div class="follow_button_block">
+                {% if keyword.keyword in followed_list %}
+                <button class="personality_subscribe_button hidden" id="" onclick="follow_personality(this)">Follow</button>
+                <button class="personality_unsubscribe_button " id="" onclick="unfollow_personality(this)">Unfollow</button>
+                {% else %}
+                <button class="personality_subscribe_button " id="" onclick="follow_personality(this)">Follow</button>
+                <button class="personality_unsubscribe_button hidden" id="" onclick="unfollow_personality(this)">Unfollow</button>
+                {% endif %}
+              </div>
+            </div>
+            
+            </div>
+    
+          </div>
+    
+          
+    </div>
+    {% endfor %}
         
     
        
     </div>
 </div>
-{% endfor %}
+
 {% include 'youtube/JS_work/filtering_videos_javascript.html' %}
 {% include 'youtube/JS_work/adding_data_on_scrolling_js.html' %}
 {% endblock %}
 {% block extrascript %}
 <script src="https://unpkg.com/boxicons@2.1.2/dist/boxicons.js"></script>
 <script src="{% static 'youtube/js/auto_complete.js' %}"></script>
-<script src="{% static 'youtube/js/save_video.js' %}"></script>
+<script src="{% static 'youtube/js/follow_personality.js' %}"></script>
 <!-- <script src="{% static 'youtube/js/filtering_videos.js' %}"></script> -->
 
 <script>
-    $(".video_box_upper").click(function(){
-  $(this).children('form').submit()
-});
-
-
-if ($('.videos_main_div').children().length == 0){
-    console.log('Empty')
-    $(this).siblings('h1').remove()
-  //do something
-} 
-// ************************** Drop Down JS
-function filter_dropdown(element) {
-  $(element).siblings('div').toggleClass("show_filter_dropdown");
-}
-// Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
-
-
-
-
-
 
 </script>
 

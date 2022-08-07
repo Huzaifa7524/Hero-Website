@@ -26,4 +26,14 @@ class AllData(models.Model):
     data= models.JSONField(null=True, blank=True)
 
 
+class FollowPersonality(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    keyword= models.ForeignKey(Keyword, on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.keyword.keyword)
+
+  
+
+
+
 

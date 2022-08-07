@@ -76,7 +76,67 @@ def home(request):
     index=0
     for category in categories:
         try:
-            keyword_obj= Keyword.objects.filter(category__category=category)
+            first_data_list=[]
+            follower_keyword_list=[]
+            followed_obj= FollowPersonality.objects.filter(user=request.user,keyword__category__category=category)
+            if followed_obj.exists():
+                for follower in followed_obj:
+                    first_data_list += follower.keyword.data
+                    follower_keyword_list.append(follower.keyword.keyword)
+
+            keyword_obj= Keyword.objects.filter(category__category=category).exclude(keyword__in=follower_keyword_list)
+            for key in keyword_obj:
+                first_data_list = first_data_list+ key.data
+            paginator = Paginator(first_data_list, 20)
+            page = request.GET.get('page', 1)
+            keywords = paginator.get_page(page)
+            paginator_list+=keywords
+            
+            obj_1=keyword_obj[0]
+            # obj_2=keyword_obj[1]
+            # print('keyword obj',obj_2)
+        
+            data_list= data_list+obj_1.data
+            # data_list= data_list+obj_2.data
+            
+            index+=1
+        except Exception as e:
+            print(e)
+            pass
+    print('Paginator', paginator_list)
+    # all_data_obj=Keyword.objects.get(id=1)
+    # data_list=data_list+all_data_obj.data
+    # data_list= data_list+video_items
+    # print(video_items)
+    
+    watchlist_videos= WatchList.objects.filter(user=request.user)
+    videos_id_list=[]
+    for video in watchlist_videos:
+        videos_id_list.append(video.video_id)
+
+    
+    # print(video_response)
+    context= {'data': paginator_list, 'watchlist_videos': videos_id_list, 'categories':categories, 'keywords_page_info':keywords}
+    return render(request, 'youtube/home.html', context)
+
+def dummy_home_2(request):
+    data_list=[]
+    paginator_list=[]
+    paginator_list_2=[]
+    # all_data_obj=AllData.objects.get(id=1)
+    categories= Category.objects.all()
+    index=0
+    for category in categories:
+        try:
+            first_data_list=[]
+            follower_keyword_list=[]
+            followed_obj= FollowPersonality.objects.filter(keyword__category__catgeory=category)
+            if followed_obj.exists():
+                for follower in followed_obj:
+                    first_data_list += follower.keyword.data
+                    follower_keyword_list.append(follower.keyword.keyword)
+
+            keyword_obj= Keyword.objects.filter(category__category=category).exclude(keyword__in=follower_keyword_list)
             
             paginator = Paginator(keyword_obj, 2)
             page = request.GET.get('page', 1)
@@ -129,6 +189,42 @@ def home_data_ajax(request):
         print('page_number',page_number)
         print('next_page',next_page)
         print('category_name',category_name)
+        first_data_list=[]
+        follower_keyword_list=[]
+        followed_obj= FollowPersonality.objects.filter(user=request.user,keyword__category__category=category_name)
+        if followed_obj.exists():
+            for follower in followed_obj:
+                first_data_list += follower.keyword.data
+                follower_keyword_list.append(follower.keyword.keyword)
+
+        keyword_obj= Keyword.objects.filter(category__category=category_name).exclude(keyword__in=follower_keyword_list)
+        for key in keyword_obj:
+            first_data_list = first_data_list+ key.data
+        paginator = Paginator(first_data_list, 20)
+        page = request.GET.get('page', next_page)
+        keywords = paginator.get_page(page)
+        paginator_list=[]
+        paginator_list+=keywords
+        return JsonResponse({'data': paginator_list, 'page_number': next_page,'videos_id_list':videos_id_list_watchlist})
+        
+def home_data_ajax_dummy(request):
+    try:
+            videos_id_list_watchlist=[]
+            watchlist_videos= WatchList.objects.filter(user=request.user)
+            
+            for video in watchlist_videos:
+                videos_id_list_watchlist.append(video.video_id)
+    except Exception as e:
+            print(e)
+            pass
+    if request.method == "POST":
+        print('post req')
+        page_number= request.POST.get('page_number') 
+        next_page= int(page_number)+1
+        category_name= request.POST.get('category_name') 
+        print('page_number',page_number)
+        print('next_page',next_page)
+        print('category_name',category_name)
         keyword_obj= Keyword.objects.filter(category__category=category_name )
         
         paginator = Paginator(keyword_obj, 2)
@@ -138,7 +234,6 @@ def home_data_ajax(request):
         for key in keywords:
             paginator_list = paginator_list+ key.data
         return JsonResponse({'data': paginator_list, 'page_number': next_page,'videos_id_list':videos_id_list_watchlist})
-        
 
 def dummy_home(request):
     # api_key = '#YOURAPIKEY'
@@ -449,6 +544,37 @@ def filter_videos_home(request):
     return JsonResponse({'data': sorted_list, 'videos_id_list':videos_id_list_watchlist})
 
 
+# Follow a personality view
+def follow_personality(request):
+    all_keywords=Keyword.objects.all()
+    all_followed_personality= FollowPersonality.objects.filter(user= request.user)
+    followed_list=[]
+    for personality in all_followed_personality:
+        followed_list.append(personality.keyword.keyword)
+    context={'all_keywords': all_keywords,'followed_list': followed_list}
+    return render(request, 'youtube/personality_follow.html', context)
+
+# follow a personality AJAX
+@ csrf_exempt
+def follow_personality_ajax(request):
+    if request.method == 'POST':
+        follow_keyword=request.POST.get('follow_keyword')
+        keyword_obj=Keyword.objects.get(keyword=follow_keyword)
+        follow_personality_obj=FollowPersonality.objects.create(user=request.user, keyword=keyword_obj)
+        follow_personality_obj.save()
+    return HttpResponse('success')
+
+# Unfollow a personality AJAX
+@ csrf_exempt
+def unfollow_personality_ajax(request):
+    if request.method == 'POST':
+        follow_keyword=request.POST.get('unfollow_keyword')
+        keyword_obj=Keyword.objects.get(keyword=follow_keyword)
+        follow_personality_obj=FollowPersonality.objects.get(user=request.user, keyword=keyword_obj)
+        follow_personality_obj.delete()
+    return HttpResponse('success')
+
+
 def test(request):
     str_1=['w9HJw2eXyqE,MeMUO_D1-pg,YjJvlhF8d5c,6vjpHJMBcsI,wEI3zqxNKbw,n2lRTW2zwNc,uacpjGQLvuE,_92PIn1wj0k,HFnPL255muo,frhuuVWC0JY,FORzH8zSrtg']
     str_2=['w9HJw2eXyqE','MeMUO_D1-pg','YjJvlhF8d5c','6vjpHJMBcsI','wEI3zqxNKbw','n2lRTW2zwNc','uacpjGQLvuE','_92PIn1wj0k','HFnPL255muo','frhuuVWC0JY','FORzH8zSrtg']
@@ -462,8 +588,8 @@ def test(request):
         for val in chunk:
             s=s+ ','+ str(val)
             s=s.lstrip(',')
-            print(str(val))
-        print('****************',s)
+            # print(str(val))
+        # print('****************',s)
     # request = youtube.videos().list(
     #     part="statistics,snippet",
     #     id=str,
@@ -476,9 +602,27 @@ def test(request):
     #     print('likes', likes)
     # sorted_l=sorted(items, key=lambda x: x['statistics']['likeCount'])
 
-    print(x)
+    # print(x)
+    # w=['Podcast']
+    # w2=['Influencer', 'Athlete','Podcast', 'Competetion']
+    # cat_obj_2= Category.objects.all().exclude(category__in=w2)
+    # cat_obj= Category.objects.all().exclude(category__in=w)
+    # matches = cat_obj_2 +cat_obj
+    # print(type(matches))
+    # for cat in matches:
+    #     print(cat.category, type(cat))
+    keyword_obj= FollowPersonality.objects.get(keyword__keyword='Cole Sager')
+    pa_list= []
+    pa_list+= keyword_obj.keyword.data
+            
+    paginator = Paginator(pa_list, 3)
+    page = request.GET.get('page', 1)
+    keywords = paginator.get_page(page)
+    for i in keywords:
+        print(i)
+    # print(keywords)
 
-    return render(request, 'youtube/personality_follow.html', context)
+    return render(request, 'youtube/personality_follow.html')
 
 
 # ********************** Functions To use for different Operations
