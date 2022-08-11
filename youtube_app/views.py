@@ -335,18 +335,21 @@ def add_to_watchlist(request):
 
 
 def watch_list_view(request):
-    all_videos= WatchList.objects.filter(user=request.user)
+    print('Watch list view ****************************')
+    all_videos= WatchList.objects.filter(user=request.user).order_by('-id')
     context= {'all_videos': all_videos}
     return render(request, 'youtube/watch_list.html', context)
 
 @csrf_exempt
 def delete_watchlist_video(request):
-    if request.method == 'POST':
-        video_id= request.POST.get('video_id')
-        video_obj= WatchList.objects.get(user= request.user, video_id= video_id)
-        video_obj.delete()
-    return HttpResponse('message')  
-
+    try:
+        if request.method == 'POST':
+            video_id= request.POST.get('video_id')
+            video_obj= WatchList.objects.get(user= request.user, video_id= video_id)
+            video_obj.delete()
+        return HttpResponse('message')  
+    except:
+        return HttpResponse('Except message')
 
 def channel_home_view(request):
 

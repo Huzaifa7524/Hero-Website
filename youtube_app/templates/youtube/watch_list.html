@@ -51,7 +51,7 @@
             <form action="{% url 'channelhome' %}" method="post">
                 {% csrf_token %}
                 <input hidden class="channel_id" name="channel_id_home" value="{{video.channel_profile_pic}}">
-                <p onclick="script: $(this).parent('form').submit()">{{video.channel_title}}</p>
+                <p class="channel_video_title" onclick="script: $(this).parent('form').submit()">{{video.channel_title}}</p>
             </form>
             <input hidden class="video_id" name="video_id" value="{{video.video_id}}">
             <button type="button" class="unsave_button"><box-icon name='bookmark' type='solid' ></box-icon></button>

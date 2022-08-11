@@ -70,7 +70,7 @@
                 </div>
                 <div class="title_box">
         
-                    <p class="video_title">{{dat.snippet.title|truncatewords:20 | safe}}</p>
+                    <p class="video_title">{{dat.snippet.title|truncatewords:10 | safe}}</p>
                     
                 </div>
     
@@ -80,7 +80,7 @@
                 <form action="{% url 'channelhome' %}" method="post">
                     {% csrf_token %}
                     <input hidden class="channel_id" name="channel_id_home" value="{{dat.snippet.channelId}}">
-                    <p onclick="script: $(this).parent('form').submit()" style="cursor: pointer;">{{dat.snippet.channelTitle}}</p>
+                    <p class="channel_video_title" onclick="script: $(this).parent('form').submit()" style="cursor: pointer;">{{dat.snippet.channelTitle}}</p>
                 </form>
                 
                

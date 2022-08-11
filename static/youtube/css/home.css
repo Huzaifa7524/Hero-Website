@@ -50,7 +50,11 @@
     cursor: pointer;
 }
 .video_title{
-    font-size: 12px;
+    
+    font-size: 14px;
+}
+.channel_video_title{
+  font-size: 11px;
 }
 .title_box{
     height: 60px;
@@ -67,6 +71,7 @@
 .watch_list_block{
     display: flex;
     justify-content: space-between;
+    margin-top: 8px;
 }
 
 .playlist_main_div{
