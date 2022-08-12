@@ -22,7 +22,7 @@ api_key_3='AIzaSyBztkmRfxkYWS9QCtS9XD8r6clecRBVK2s'
 api_key_4='AIzaSyA4Mt5QJqtcTJ77BHIeFAj12M6s5mSUiFQ'
 api_key_5='AIzaSyA6aQiZykCZBYzGheYaKYdJYPKUsAQrrCs'
 
-youtube = build('youtube', 'v3', developerKey=api_key_3)
+youtube = build('youtube', 'v3', developerKey=api_key_5)
 # Create your views here.
 def register(request):
     if request.method== 'POST':
@@ -451,10 +451,9 @@ def update_data_db(request):
     for keyword in all_keywords:
         keyword_var= keyword.keyword
         channel_id= keyword.channel_id
-        catgegory_var=keyword.category.category
-        search_var= keyword_var+','+catgegory_var
-        print('*************search_var', search_var) 
-        if keyword_var:    
+        catgegory_var=keyword.category.category 
+        if keyword_var: 
+            search_var= keyword_var+','+catgegory_var   
             video_request = youtube.search().list(
                 part='snippet',
                 type='video',
@@ -465,21 +464,25 @@ def update_data_db(request):
                 
             
             )
+            video_response = video_request.execute()
+            video_items= video_response['items']
         if channel_id:
             video_request = youtube.search().list(
                 part='snippet',
                 type='video',
                 # q='Athletes,Football, Volleyball',
-                q=search_var,
+                channelId= channel_id,
                 maxResults=30,
                 order= 'date'
                 
             
             )
+            video_response = video_request.execute()
+            video_items= video_response['items']
 
         list=[]
-        video_response = video_request.execute()
-        video_items= video_response['items']
+        
+        
         data_list = data_list+video_items
         all_data_obj= AllData.objects.get(id=1)
         all_data_obj.data=data_list
