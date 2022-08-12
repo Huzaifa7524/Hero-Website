@@ -48,12 +48,17 @@
                 <img class="personality_profile_image" src="{% static 'user/images/blank-profile-picture.png' %}" alt="{{video_title | safe}}" style="width:85px">
               </div>
               <div class="personality_title_container">
+                    {% if keyword.keyword %}
                     <h1 class="personality_title">{{ keyword.keyword}}</h1>
+                    {% else %}
+                    <h1 class="personality_title">{{ keyword.data.0.snippet.channelTitle }}</h1>
+                    {% endif %}
                     <p class="personality_category">{{ keyword.category.category }}</p>
               </div>
             </div>
             <div class="personality_header_right">
               <input type="text" name="follow_keyword" id="follow_keyword_value" value="{{ keyword.keyword }}" hidden>
+              <input type="text" name="follow_keyword_channel_id" id="follow_keyword_channel_id_value" value="{{ keyword.data.0.snippet.channelId }}" hidden>
               <div class="follow_button_block">
                 {% if keyword.keyword in followed_list %}
                 <button class="personality_subscribe_button hidden" id="" onclick="follow_personality(this)">Follow</button>

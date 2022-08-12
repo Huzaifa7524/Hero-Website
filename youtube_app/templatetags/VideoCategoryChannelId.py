@@ -2,15 +2,16 @@ from atexit import register
 from django import template
 from youtube_app.models import WatchList, Category, Keyword
 register= template.Library()
-@register.filter(name='VideoCategory')
-def VideoCategory(string_value):
+@register.filter(name='VideoCategoryChannelId')
+def VideoCategoryChannelId(string_value):
     all_keywords= Keyword.objects.all()
-    # print('String#######', string_value)
+    
     list=[]
     for keyword in all_keywords:
         # print('keyword#######', keyword.keyword)
-        if keyword.keyword in string_value:
-            # print('if temp', keyword.category.category)
+        if keyword.channel_id == string_value:
+            print('String####### channel', string_value, keyword.channel_id)
+            print('if temp video channel', keyword.category.category)
             return keyword.category.category
         
         else:

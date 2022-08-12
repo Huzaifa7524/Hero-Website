@@ -16,7 +16,7 @@ class KeywordResource(resources.ModelResource):
         model = Keyword
 
 class KeywordAdmin(ImportExportModelAdmin):
-    list_display = ('category', 'keyword')
+    list_display = ('category', 'keyword', 'channel_id')
 
 # class FollowPersonalityAdmin(ImportExportModelAdmin):
 #     list_display = ('user', 'keyword')

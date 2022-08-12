@@ -22,7 +22,7 @@ api_key_3='AIzaSyBztkmRfxkYWS9QCtS9XD8r6clecRBVK2s'
 api_key_4='AIzaSyA4Mt5QJqtcTJ77BHIeFAj12M6s5mSUiFQ'
 api_key_5='AIzaSyA6aQiZykCZBYzGheYaKYdJYPKUsAQrrCs'
 
-youtube = build('youtube', 'v3', developerKey=api_key_2)
+youtube = build('youtube', 'v3', developerKey=api_key_3)
 # Create your views here.
 def register(request):
     if request.method== 'POST':
@@ -411,14 +411,12 @@ def search_view(request):
                     )
                 video_response = video_request.execute()
                 video_items= video_response['items']
-                country_list=["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua & Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia & Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","North Korea","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre & Miquelon","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","St Kitts & Nevis","St Lucia","St Vincent","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Turks & Caicos","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
-                json_list= json.dumps(country_list)
                 watchlist_videos= WatchList.objects.filter(user=request.user)
                 All_keywords= Keyword.objects.all()
                 videos_id_list=[]
                 for video in watchlist_videos:
                     videos_id_list.append(video.video_id)
-                context= {'data': video_items, 'watchlist_videos': videos_id_list, 'all_keywords': All_keywords, 'country_list': country_list}
+                context= {'data': video_items, 'watchlist_videos': videos_id_list, 'all_keywords': All_keywords}
                 return render(request, 'youtube/search.html', context)
             else:
                 message= 'Sorry! No Search Result Found'
@@ -452,19 +450,33 @@ def update_data_db(request):
     dummy_data_list=[]
     for keyword in all_keywords:
         keyword_var= keyword.keyword
+        channel_id= keyword.channel_id
         catgegory_var=keyword.category.category
         search_var= keyword_var+','+catgegory_var
-        print('*************search_var', search_var)     
-        video_request = youtube.search().list(
-            part='snippet',
-            type='video',
-            # q='Athletes,Football, Volleyball',
-            q=search_var,
-            maxResults=15,
-            order= 'date'
+        print('*************search_var', search_var) 
+        if keyword_var:    
+            video_request = youtube.search().list(
+                part='snippet',
+                type='video',
+                # q='Athletes,Football, Volleyball',
+                q=search_var,
+                maxResults=30,
+                order= 'date'
+                
             
-        
-        )
+            )
+        if channel_id:
+            video_request = youtube.search().list(
+                part='snippet',
+                type='video',
+                # q='Athletes,Football, Volleyball',
+                q=search_var,
+                maxResults=30,
+                order= 'date'
+                
+            
+            )
+
         list=[]
         video_response = video_request.execute()
         video_items= video_response['items']
@@ -562,9 +574,20 @@ def follow_personality(request):
 def follow_personality_ajax(request):
     if request.method == 'POST':
         follow_keyword=request.POST.get('follow_keyword')
-        keyword_obj=Keyword.objects.get(keyword=follow_keyword)
-        follow_personality_obj=FollowPersonality.objects.create(user=request.user, keyword=keyword_obj)
-        follow_personality_obj.save()
+        follow_keyword_channel_id= request.POST.get('follow_keyword_channel_id')
+        print('follow', follow_keyword)
+        print('unfollow', follow_keyword_channel_id)
+        try:
+            print('try')
+            keyword_obj=Keyword.objects.get(keyword=follow_keyword)
+            follow_personality_obj=FollowPersonality.objects.create(user=request.user, keyword=keyword_obj)
+            follow_personality_obj.save()
+        except:
+            print('except')
+            keyword_obj=Keyword.objects.get(channel_id=follow_keyword_channel_id)
+            follow_personality_obj=FollowPersonality.objects.create(user=request.user, keyword=keyword_obj)
+            follow_personality_obj.save()
+
     return HttpResponse('success')
 
 # Unfollow a personality AJAX
@@ -572,9 +595,16 @@ def follow_personality_ajax(request):
 def unfollow_personality_ajax(request):
     if request.method == 'POST':
         follow_keyword=request.POST.get('unfollow_keyword')
-        keyword_obj=Keyword.objects.get(keyword=follow_keyword)
-        follow_personality_obj=FollowPersonality.objects.get(user=request.user, keyword=keyword_obj)
-        follow_personality_obj.delete()
+        unfollow_keyword_channel_id= request.POST.get('unfollow_keyword_channel_id')
+        try:
+            keyword_obj=Keyword.objects.get(keyword=follow_keyword)
+            follow_personality_obj=FollowPersonality.objects.get(user=request.user, keyword=keyword_obj)
+            follow_personality_obj.delete()
+        except:
+            keyword_obj=Keyword.objects.get(channel_id=unfollow_keyword_channel_id)
+            follow_personality_obj=FollowPersonality.objects.get(user=request.user, keyword=keyword_obj)
+            follow_personality_obj.delete()
+
     return HttpResponse('success')
 
 
@@ -614,16 +644,41 @@ def test(request):
     # print(type(matches))
     # for cat in matches:
     #     print(cat.category, type(cat))
-    keyword_obj= FollowPersonality.objects.get(keyword__keyword='Cole Sager')
-    pa_list= []
-    pa_list+= keyword_obj.keyword.data
+    # keyword_obj= FollowPersonality.objects.get(keyword__keyword='Cole Sager')
+    # pa_list= []
+    # pa_list+= keyword_obj.keyword.data
             
-    paginator = Paginator(pa_list, 3)
-    page = request.GET.get('page', 1)
-    keywords = paginator.get_page(page)
-    for i in keywords:
-        print(i)
+    # paginator = Paginator(pa_list, 3)
+    # page = request.GET.get('page', 1)
+    # keywords = paginator.get_page(page)
+    # for i in keywords:
+    #     print(i)
     # print(keywords)
+    all_keywords= Keyword.objects.all()
+    keyword_var=''
+    data_list= []
+    dummy_data_list=[]
+    for keyword in all_keywords:
+        keyword_var= keyword.keyword
+        channel_id= keyword.channel_id
+        if keyword_var:
+            print('Keyword', keyword_var)
+        if channel_id:
+            print('CHannel ID', channel_id)
+            video_request = youtube.search().list(
+                part='snippet',
+                type='video',
+                # q='Athletes,Football, Volleyball',
+                channelId= channel_id,
+                maxResults=30,
+                order= 'date'
+                
+            
+            )
+            video_response = video_request.execute()
+            video_items= video_response['items']
+            keyword.data=video_items
+            keyword.save()
 
     return render(request, 'youtube/personality_follow.html')
 
