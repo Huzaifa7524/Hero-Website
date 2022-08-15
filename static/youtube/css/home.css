@@ -14,6 +14,14 @@
 
     margin-top: 10px;
 }
+.most_recent{
+  display: -webkit-box;
+  overflow-x: scroll;
+    justify-content: left; 
+    align-items: center;
+
+    margin-top: 10px;
+}
 
 /* Custom Scroll Bar */
 ::-webkit-scrollbar {

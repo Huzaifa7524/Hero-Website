@@ -4,6 +4,7 @@
 {% block title %} Video Player{% endblock %}
 {% block extrastylesheet %}
 <link rel="stylesheet" href="{% static 'youtube/css/video_player.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 {% endblock %}
 {% block content %}
 <div class="upper_block_main">
@@ -14,8 +15,14 @@
     <div class="video_title">
         <h5>{{video_title | safe}}</h5>
     </div>
-    <div class="video_date">
-        <p>{{ upload_date}}</p>
+    <div class="video_date" style="display: flex; justify-content: space-between; padding-right: 50%;">
+        
+            <p>{{ upload_date}}</p>
+            <div class="d-flex statistics_block"><i class='bx bx-like nav_icon'></i><p> {{video_statistics.0.statistics.likeCount}}</p></div>
+            <div class="d-flex statistics_block"><i class='bx bx-chat nav_icon'></i><p> {{video_statistics.0.statistics.commentCount}}</p></div>         
+            <p class="views_stats"> {{video_statistics.0.statistics.viewCount}}  views </p>
+        
+        
     </div>
     <div class="video_desc">
         <div>

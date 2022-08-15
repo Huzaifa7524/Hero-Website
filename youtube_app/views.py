@@ -22,7 +22,7 @@ api_key_3='AIzaSyBztkmRfxkYWS9QCtS9XD8r6clecRBVK2s'
 api_key_4='AIzaSyA4Mt5QJqtcTJ77BHIeFAj12M6s5mSUiFQ'
 api_key_5='AIzaSyA6aQiZykCZBYzGheYaKYdJYPKUsAQrrCs'
 
-youtube = build('youtube', 'v3', developerKey=api_key_5)
+youtube = build('youtube', 'v3', developerKey=api_key_4)
 # Create your views here.
 def register(request):
     if request.method== 'POST':
@@ -108,7 +108,10 @@ def home(request):
     # data_list=data_list+all_data_obj.data
     # data_list= data_list+video_items
     # print(video_items)
-    
+    most_recent_keywords_obj= Keyword.objects.filter(most_recent=True)
+    paginator_recent = Paginator(most_recent_keywords_obj,1)
+    page_recent = request.GET.get('page', 1)
+    most_recent_keywords = paginator_recent.get_page(page_recent)
     watchlist_videos= WatchList.objects.filter(user=request.user)
     videos_id_list=[]
     for video in watchlist_videos:
@@ -116,7 +119,7 @@ def home(request):
 
     
     # print(video_response)
-    context= {'data': paginator_list, 'watchlist_videos': videos_id_list, 'categories':categories, 'keywords_page_info':keywords}
+    context= {'data': paginator_list, 'watchlist_videos': videos_id_list, 'categories':categories, 'keywords_page_info':keywords, 'most_recent': most_recent_keywords}
     return render(request, 'youtube/home.html', context)
 
 def dummy_home_2(request):
@@ -206,7 +209,40 @@ def home_data_ajax(request):
         paginator_list=[]
         paginator_list+=keywords
         return JsonResponse({'data': paginator_list, 'page_number': next_page,'videos_id_list':videos_id_list_watchlist})
-        
+
+# AJAX Call to get data of remaining recent Objects
+@csrf_exempt
+def home_data_recent_ajax(request):
+    try:
+            videos_id_list_watchlist=[]
+            watchlist_videos= WatchList.objects.filter(user=request.user)
+            
+            for video in watchlist_videos:
+                videos_id_list_watchlist.append(video.video_id)
+    except Exception as e:
+            print(e)
+            pass
+    if request.method == "POST":
+        print('post req')
+        page_number= request.POST.get('page_number') 
+        next_page= int(page_number)+1
+        category_name= request.POST.get('category_name') 
+        print('page_number',page_number)
+        print('next_page',next_page)
+        print('category_name',category_name)
+        first_data_list=[]
+        keyword_obj= Keyword.objects.filter(most_recent=True)
+        # for key in keyword_obj:
+        #     first_data_list = first_data_list+ key.data
+        paginator = Paginator(keyword_obj, 2)
+        page = request.GET.get('page', next_page)
+        keywords = paginator.get_page(page)
+        for key in keywords:
+            first_data_list = first_data_list+ key.data
+        paginator_list=[]
+        # paginator_list+=keywords
+        return JsonResponse({'data': first_data_list, 'page_number': next_page,'videos_id_list':videos_id_list_watchlist})
+         
 def home_data_ajax_dummy(request):
     try:
             videos_id_list_watchlist=[]
@@ -291,8 +327,8 @@ def video_view(request):
         video_id= request.POST.get('video_id')
         channel_title= request.POST.get('channel_title')
         channel_profile= request.POST.get('channel_id')
-        print('channel_id', channel_profile)
-        # To get the cahnnel profile pic
+        # print('video_id', video_id)
+        # *************************** To get the cahnnel profile pic
         request_channel_snippet = youtube.channels().list(
             part='snippet',
             id=channel_profile 
@@ -304,14 +340,23 @@ def video_view(request):
         # End profile picture
         video_date= request.POST.get('video_date')
         d1 = datetime.datetime.strptime(video_date,"%Y-%m-%dT%H:%M:%SZ")
-        # now = date.now()
-        # d2 = datetime.datetime.strptime(now,"%Y-%m-%dT%H:%M:%SZ")
+
+        # ************************** Getting video statistics
+        
+        request_video_statistics = youtube.videos().list(
+                        part="statistics,snippet",
+                        id=video_id,
+                        maxResults=1
+                        )
+        response_video_statistics = request_video_statistics.execute()
+        video_statistic_items= response_video_statistics['items']
+        
 
 
-        print('dq****', d1)
+        # print('video_statistic_items****', video_statistic_items)
         new_format = "%Y-%m-%d"
         upload_date=(d1.strftime(new_format))
-    context = {'video_description': video_description, 'video_title': video_title, 'video_id': video_id, 'channel_title': channel_title, 'channel_profile': profile_picture, 'upload_date': d1}
+    context = {'video_description': video_description, 'video_title': video_title, 'video_id': video_id, 'channel_title': channel_title, 'channel_profile': profile_picture, 'upload_date': d1, 'video_statistics': video_statistic_items}
     return render(request, 'youtube/video_player.html', context)
 
 @csrf_exempt
@@ -657,33 +702,37 @@ def test(request):
     # for i in keywords:
     #     print(i)
     # print(keywords)
-    all_keywords= Keyword.objects.all()
-    keyword_var=''
-    data_list= []
-    dummy_data_list=[]
-    for keyword in all_keywords:
-        keyword_var= keyword.keyword
-        channel_id= keyword.channel_id
-        if keyword_var:
-            print('Keyword', keyword_var)
-        if channel_id:
-            print('CHannel ID', channel_id)
-            video_request = youtube.search().list(
-                part='snippet',
-                type='video',
-                # q='Athletes,Football, Volleyball',
-                channelId= channel_id,
-                maxResults=30,
-                order= 'date'
+    # all_keywords= Keyword.objects.all()
+    # keyword_var=''
+    # data_list= []
+    # dummy_data_list=[]
+    # for keyword in all_keywords:
+    #     keyword_var= keyword.keyword
+    #     channel_id= keyword.channel_id
+    #     if keyword_var:
+    #         print('Keyword', keyword_var)
+    #     if channel_id:
+    #         print('CHannel ID', channel_id)
+    #         video_request = youtube.search().list(
+    #             part='snippet',
+    #             type='video',
+    #             # q='Athletes,Football, Volleyball',
+    #             channelId= channel_id,
+    #             maxResults=30,
+    #             order= 'date'
                 
             
-            )
-            video_response = video_request.execute()
-            video_items= video_response['items']
-            keyword.data=video_items
-            keyword.save()
+    #         )
+    #         video_response = video_request.execute()
+    #         video_items= video_response['items']
+    #         keyword.data=video_items
+    #         keyword.save()
+    most_recent_keywords= Keyword.objects.filter(most_recent=True)
+    
+    # for most_recent in most_recent_keywords:
 
-    return render(request, 'youtube/personality_follow.html')
+    context={'most_recent': most_recent_keywords}
+    return render(request, 'youtube/personality_follow.html', context)
 
 
 # ********************** Functions To use for different Operations

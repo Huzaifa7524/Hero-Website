@@ -14,10 +14,13 @@ class KeywordResource(resources.ModelResource):
 
     class Meta:
         model = Keyword
-
+@admin.action(description='Remove videos from most recent')
+def remove_recent(modeladmin, request, queryset):
+    queryset.update(most_recent='False')
 class KeywordAdmin(ImportExportModelAdmin):
-    list_display = ('category', 'keyword', 'channel_id')
-
+    list_display = ('category', 'keyword', 'channel_id', 'most_recent')
+    list_filter = ('most_recent',)
+    actions = [remove_recent]
 # class FollowPersonalityAdmin(ImportExportModelAdmin):
 #     list_display = ('user', 'keyword')
 

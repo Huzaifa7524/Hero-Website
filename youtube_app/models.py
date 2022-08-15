@@ -22,6 +22,7 @@ class Keyword(models.Model):
     keyword= models.CharField(max_length=50, null= True, blank=True)
     channel_id= models.CharField(max_length=100, default= '', null= True, blank= True)
     data=models.JSONField(null= True, blank=True)
+    most_recent= models.BooleanField(default=False)
     def __str__(self):
         return u'{0}'.format(self.keyword)
 
