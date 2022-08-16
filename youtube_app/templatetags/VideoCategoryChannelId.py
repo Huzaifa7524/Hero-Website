@@ -8,10 +8,10 @@ def VideoCategoryChannelId(string_value):
     
     list=[]
     for keyword in all_keywords:
-        # print('keyword#######', keyword.keyword)
+        # print('Channel filter#######', keyword.keyword)
         if keyword.channel_id == string_value:
-            print('String####### channel', string_value, keyword.channel_id)
-            print('if temp video channel', keyword.category.category)
+            # print('String####### channel', string_value, keyword.channel_id)
+            # print('if temp video channel', keyword.category.category)
             return keyword.category.category
         
         else:

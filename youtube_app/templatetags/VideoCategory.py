@@ -11,6 +11,7 @@ def VideoCategory(string_value):
         # print('keyword#######', keyword.keyword)
         if keyword.keyword in string_value:
             # print('if temp', keyword.category.category)
+            # print('if temp', keyword.category.category)
             return keyword.category.category
         
         else:
