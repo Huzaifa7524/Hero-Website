@@ -37,6 +37,8 @@ class KeywordAdmin(ImportExportModelAdmin):
     actions = [remove_recent]
     # resource_class = KeywordResource
 
+class RandomVideoAdmin(admin.ModelAdmin):
+    list_display = ('video_id', 'video_title')
 
 # class FollowPersonalityAdmin(ImportExportModelAdmin):
 #     list_display = ('user', 'keyword')
@@ -46,3 +48,4 @@ admin.site.register(Category,CategoryAdmin)
 admin.site.register(Keyword, KeywordAdmin)
 admin.site.register(AllData)
 admin.site.register(FollowPersonality)
+admin.site.register(RandomVideo, RandomVideoAdmin)

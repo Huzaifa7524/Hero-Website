@@ -91,7 +91,7 @@ def home(request):
             for key in keyword_obj:
                 print('Keyword', key.keyword)
                 first_data_list = first_data_list+ key.data
-            paginator = Paginator(first_data_list, 20)
+            paginator = Paginator(first_data_list, 1)
             page = request.GET.get('page', 1)
             keywords = paginator.get_page(page)
             
@@ -124,9 +124,14 @@ def home(request):
     for video in watchlist_videos:
         videos_id_list.append(video.video_id)
 
-    
+    # Random Video
+    random_videos = RandomVideo.objects.all()
+    if not random_videos.exists():
+        print('**************No random video')
+        random_videos = ""
+        
     # print(video_response)
-    context= {'data': paginator_list, 'watchlist_videos': videos_id_list, 'categories':categories, 'keywords_page_info':keywords, 'most_recent': most_recent_keywords}
+    context= {'data': paginator_list, 'watchlist_videos': videos_id_list, 'categories':categories, 'keywords_page_info':keywords, 'most_recent': most_recent_keywords, 'all_random_videos':random_videos}
     return render(request, 'youtube/home.html', context)
 
 def dummy_home_2(request):
@@ -249,7 +254,51 @@ def home_data_recent_ajax(request):
         paginator_list=[]
         # paginator_list+=keywords
         return JsonResponse({'data': first_data_list, 'page_number': next_page,'videos_id_list':videos_id_list_watchlist})
-         
+
+# Add data in home page on load AJAX
+@csrf_exempt
+def add_data_home_onload(request):
+    try:
+            videos_id_list_watchlist=[]
+            watchlist_videos= WatchList.objects.filter(user=request.user)
+            
+            for video in watchlist_videos:
+                videos_id_list_watchlist.append(video.video_id)
+    except Exception as e:
+            print(e)
+            pass
+    if request.method == 'POST':
+        filter_category= request.POST.get('filter_category')
+        filter= request.POST.get('filter')
+        filter_type=type_of_filter(filter)
+        print('category', filter_category)
+        print('filter',filter)
+        print('type_of_filter(filter)', type_of_filter(filter))
+ 
+        first_data_list=[]
+        follower_keyword_list=[]
+        followed_obj= FollowPersonality.objects.filter(user=request.user,keyword__category__category=filter_category)
+        if followed_obj.exists():
+            for follower in followed_obj:
+                first_data_list += follower.keyword.data
+                follower_keyword_list.append(follower.keyword.keyword)
+
+        keyword_obj= Keyword.objects.filter(category__category=filter_category).exclude(keyword__in=follower_keyword_list)
+        paginator_list=[]
+        for key in keyword_obj:
+            first_data_list = first_data_list+ key.data
+        sorted_list = first_data_list
+        paginator = Paginator(first_data_list, 20)
+        page = request.GET.get('page', 1)
+        keywords = paginator.get_page(page)
+        
+        for key_d in keywords:
+            print('Data', key_d)
+        paginator_list+=keywords
+        # print(sorted_list)
+    return JsonResponse({'data': paginator_list, 'videos_id_list':videos_id_list_watchlist})
+ 
+
 def home_data_ajax_dummy(request):
     try:
             videos_id_list_watchlist=[]
@@ -375,6 +424,7 @@ def add_to_watchlist(request):
         video_id = request.POST.get('video_id')
         channel_title = request.POST.get('channel_title')
         video_date = request.POST.get('video_date')
+        print("Video Date", video_date)
         d1 = datetime.datetime.strptime(video_date,"%Y-%m-%dT%H:%M:%SZ")
         channel_profile = request.POST.get('channel_profile')
         video_thumbnail_pic = request.POST.get('video_thumbnail_pic')
@@ -502,6 +552,8 @@ def auto_complete(request):
 # Update data of the site in the database every 24 hour 
 
 def update_data_db(request):
+    api_key_6= 'AIzaSyAczxkO9D2vorvtomWQwtGLEnQ2FjmRdjk'
+    youtube_db = build('youtube', 'v3', developerKey=api_key_6)
     all_keywords= Keyword.objects.all()
     keyword_var=''
     data_list= []
@@ -518,7 +570,7 @@ def update_data_db(request):
             if channel_id:
                 try:
                     print('*********Channel id api*******')
-                    video_request = youtube.search().list(
+                    video_request = youtube_db.search().list(
                         part='snippet',
                         type='video',
                         # q='Athletes,Football, Volleyball',
@@ -589,6 +641,20 @@ def filter_videos_home(request):
         print('category', filter_category)
         print('filter',filter)
         print('type_of_filter(filter)', type_of_filter(filter))
+        # if filter == 'Default':
+        #     first_data_list=[]
+        #     follower_keyword_list=[]
+        #     followed_obj= FollowPersonality.objects.filter(user=request.user,keyword__category__category=filter_category)
+        #     if followed_obj.exists():
+        #         for follower in followed_obj:
+        #             first_data_list += follower.keyword.data
+        #             follower_keyword_list.append(follower.keyword.keyword)
+
+        #     keyword_obj= Keyword.objects.filter(category__category=filter_category).exclude(keyword__in=follower_keyword_list)
+        #     for key in keyword_obj:
+        #         first_data_list = first_data_list+ key.data
+        #     sorted_list = first_data_list
+        # else:
         All_keywords= Keyword.objects.filter(category__category = filter_category)
         keywords_data_list= []
         videos_api_data=[]
@@ -636,9 +702,13 @@ def filter_videos_home(request):
                 updated_data_list.append(item)
                 likes= item['statistics'][str(filter_type)]
                 # print('likes', type(likes), likes)
-        sorted_list=sorted(updated_data_list, key=lambda x: int(x['statistics'][str(filter_type)]), reverse=True)
+        sorted_list=[]
+        if filter == 'Default':
+            sorted_list=sorted_list+videos_api_data
+        else:    
+            sorted_list=sorted(updated_data_list, key=lambda x: int(x['statistics'][str(filter_type)]), reverse=True)
         # print(sorted_list)  
-            
+        
     return JsonResponse({'data': sorted_list, 'videos_id_list':videos_id_list_watchlist})
 
 
@@ -695,7 +765,7 @@ def test(request):
     str_1=['w9HJw2eXyqE,MeMUO_D1-pg,YjJvlhF8d5c,6vjpHJMBcsI,wEI3zqxNKbw,n2lRTW2zwNc,uacpjGQLvuE,_92PIn1wj0k,HFnPL255muo,frhuuVWC0JY,FORzH8zSrtg']
     str_2=['w9HJw2eXyqE','MeMUO_D1-pg','YjJvlhF8d5c','6vjpHJMBcsI','wEI3zqxNKbw','n2lRTW2zwNc','uacpjGQLvuE','_92PIn1wj0k','HFnPL255muo','frhuuVWC0JY','FORzH8zSrtg']
     
-    print((str_2))
+    # print((str_2))
     n = 12
     # x=[]
     x = list(divide_chunks(str_2, n))
@@ -737,7 +807,7 @@ def test(request):
     # for i in keywords:
     #     print(i)
     # print(keywords)
-    # all_keywords= Keyword.objects.all()
+    all_keywords= Keyword.objects.all()
     # keyword_var=''
     # data_list= []
     # dummy_data_list=[]
@@ -762,12 +832,19 @@ def test(request):
     #         video_items= video_response['items']
     #         keyword.data=video_items
     #         keyword.save()
-    most_recent_keywords= Keyword.objects.filter(most_recent=True)
+    # most_recent_keywords= Keyword.objects.filter(most_recent=True)
     
     # for most_recent in most_recent_keywords:
-
-    context={'most_recent': most_recent_keywords}
-    return render(request, 'youtube/personality_follow.html', context)
+    word = '2022 NOBULL CROSSFIT GAMES'
+    string = 'Did my BIG RISKS Pay Off? // 2022 NOBULL CROSSFIT GAMES / Road to Madison'
+    for keyword in all_keywords:
+        for dat in keyword.data:    
+            if keyword.keyword.upper() in dat['snippet']['title'] or keyword.keyword in dat['snippet']['title']:
+                print('if' , keyword.keyword)
+            else:
+                print('else', keyword.keyword)    
+    # context={'most_recent': most_recent_keywords}
+    return render(request, 'youtube/personality_follow.html')
 
 
 # ********************** Functions To use for different Operations
@@ -785,6 +862,9 @@ def type_of_filter(filter_key):
         return returned_value
     if filter_key== 'Comment' or filter_key== 'comment' or filter_key== 'Comments' or filter_key== 'comments':
         returned_value='commentCount'
+        return returned_value
+    if filter_key== 'View Count' or filter_key== 'view count':
+        returned_value='viewCount'
         return returned_value
     if filter_key== 'View Count' or filter_key== 'view count':
         returned_value='viewCount'

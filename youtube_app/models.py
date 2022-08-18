@@ -38,6 +38,16 @@ class FollowPersonality(models.Model):
     def __str__(self):
         return "{0}".format(self.keyword.keyword)
 
+# Add Random Video in Database to show on your page
+class RandomVideo(models.Model):
+    video_title= models.CharField(max_length=300)
+    video_description= models.CharField(max_length= 600)
+    video_id= models.CharField(max_length= 20)
+    channel_title= models.CharField(max_length=100)
+    upload_date=models.CharField(max_length=100)
+    channel_id= models.CharField(max_length=100)
+    video_thumbnail_pic_url= models.URLField(max_length=200, default='')
+
   
 
 

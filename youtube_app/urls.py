@@ -17,7 +17,8 @@ urlpatterns = [
     path('search/', views.search_view, name='search'),
 
     path('auto_complete/', views.auto_complete, name='auto_complete'),
-
+    # Add data on home page on load using ajax
+    path('add_data_home_onload/', views.add_data_home_onload, name='add_data_home_onload'),
     # Update data in db
     path('update_data_db/', views.update_data_db, name='update_data_db'),
 

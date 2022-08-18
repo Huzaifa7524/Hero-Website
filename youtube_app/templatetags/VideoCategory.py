@@ -13,7 +13,10 @@ def VideoCategory(string_value):
             # print('if temp', keyword.category.category)
             # print('if temp', keyword.category.category)
             return keyword.category.category
-        
+        elif keyword.keyword.upper() in string_value:
+            return keyword.category.category
+        elif keyword.keyword.lower() in string_value:
+            return keyword.category.category
         else:
             # print('else')
             pass
