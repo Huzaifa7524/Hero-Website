@@ -220,7 +220,10 @@
     <div class="videos_main_div {{i.category|cut:' '}}" >
         <input type="text" hidden name="page_number" id="page_number" value="{{keywords_page_info.number}}">
         <input type="text" hidden name="category_name" id="category_name" value="{{i.category}}">
-    
+        <div class="home_page_loader_block">
+            <div class="loader"></div>
+        </div>
+        
         {% for dat in data %}
            
          {% if dat.snippet.title|VideoCategory == i.category  %}   
@@ -278,6 +281,7 @@
             
     
         </div>
+        
         
         {% endif %}
        

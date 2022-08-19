@@ -15,8 +15,9 @@ class WatchList(models.Model):
 
 class Category(models.Model):
     category= models.CharField(max_length=40)
+    order_of_display=models.IntegerField(default=0)
     def __str__(self):
-        return str(self.category)
+        return u'{0}'.format(self.category)
 class Keyword(models.Model):
     category= models.ForeignKey(Category, on_delete=models.CASCADE)
     keyword= models.CharField(max_length=50, null= True, blank=True)

@@ -26,6 +26,7 @@
 /* Custom Scroll Bar */
 ::-webkit-scrollbar {
   width: 3px !important;
+  height: 7px !important;
 }
 
 /* Track */
@@ -126,5 +127,37 @@
     margin-top: 30px;
     font-style: italic;
   }
+
+
+  /* Pre loader home page */
+  .home_page_loader_block{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+  .loader {
+    border: 10px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 10px solid #919191;
+    width: 100px;
+    height: 100px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
 
   

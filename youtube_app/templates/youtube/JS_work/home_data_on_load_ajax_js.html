@@ -20,7 +20,7 @@
           success:function(response){
             category_div = category_div.replaceAll(' ', '')
             $('.'+category_div).html("")
-            html_var='<input type="text" hidden name="category_name" id="category_name" value="'+category_div+'"><input type="text" hidden name="page_number" id="page_number" value="1">'
+            html_var='<input type="text" hidden name="category_name" id="category_name" value="'+category_div+'"><input type="text" hidden name="page_number" id="page_number" value="1"><div class="home_page_loader_block hidden" ><div class="loader"></div></div>'
 
             $('.'+category_div).html(html_var)
 

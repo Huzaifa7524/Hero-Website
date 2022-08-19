@@ -73,7 +73,7 @@ def home(request):
     paginator_list=[]
     paginator_list_2=[]
     # all_data_obj=AllData.objects.get(id=1)
-    categories= Category.objects.all()
+    categories= Category.objects.all().order_by('order_of_display')
     index=0
     for category in categories:
         print("category*********************************************************",category)
@@ -115,16 +115,19 @@ def home(request):
     # data_list=data_list+all_data_obj.data
     # data_list= data_list+video_items
     # print(video_items)
+    # ********************** All recent videos
     most_recent_keywords_obj= Keyword.objects.filter(most_recent=True)
     paginator_recent = Paginator(most_recent_keywords_obj,1)
     page_recent = request.GET.get('page', 1)
     most_recent_keywords = paginator_recent.get_page(page_recent)
     watchlist_videos= WatchList.objects.filter(user=request.user)
     videos_id_list=[]
+    
+    # ********************* Watch list videos
     for video in watchlist_videos:
         videos_id_list.append(video.video_id)
 
-    # Random Video
+    # ********************* Random Video
     random_videos = RandomVideo.objects.all()
     if not random_videos.exists():
         print('**************No random video')
@@ -417,7 +420,6 @@ def video_view(request):
 
 @csrf_exempt
 def add_to_watchlist(request):
-    # if request.is_ajax():
     if request.method == 'POST':
         video_description = request.POST.get('video_description')
         video_title = request.POST.get('video_title')
@@ -431,8 +433,6 @@ def add_to_watchlist(request):
         WatchListobj= WatchList.objects.create(user= request.user, video_title=video_title, video_description=video_description, video_id=video_id,channel_title=channel_title, upload_date=video_date,channel_profile_pic=channel_profile,video_thumbnail_pic= video_thumbnail_pic)
         WatchListobj.save()
         print('****************************** Ajax Req', video_description)
-    # else:
-    #     message = "Not Ajax"
     return HttpResponse('message')
 
 
@@ -513,6 +513,18 @@ def search_view(request):
                     )
                 video_response = video_request.execute()
                 video_items= video_response['items']
+                # ******************* If search result did not return proper result
+                if len(video_items) < 10:
+                    print('************** Len is less than 2s')
+                    video_request = youtube.search().list(
+                        part='snippet',
+                        type='video',
+                        q=keyword_var,
+                        maxResults=50,
+                        order= 'date' 
+                    )
+                    video_response = video_request.execute()
+                    video_items= video_response['items']
                 if not len(video_items):
                     print('empty',video_items)
                     keyword_obj= keyword_obj[0]
@@ -603,6 +615,18 @@ def update_data_db(request):
                             )
                             video_response = video_request.execute()
                             video_items= video_response['items']
+                            # ******************* If search result did not return proper result
+                            if len(video_items) < 10:
+                                print('************** Len is less than 2s')
+                                video_request = youtube.search().list(
+                                    part='snippet',
+                                    type='video',
+                                    q=keyword_var,
+                                    maxResults=50,
+                                    order= 'date' 
+                                )
+                                video_response = video_request.execute()
+                                video_items= video_response['items']
                             data_list = data_list+video_items
                             keyword.data=video_items
                             keyword.save()
@@ -807,7 +831,7 @@ def test(request):
     # for i in keywords:
     #     print(i)
     # print(keywords)
-    all_keywords= Keyword.objects.all()
+    all_keywords= Category.objects.all().order_by('order_of_display')
     # keyword_var=''
     # data_list= []
     # dummy_data_list=[]
@@ -838,11 +862,7 @@ def test(request):
     word = '2022 NOBULL CROSSFIT GAMES'
     string = 'Did my BIG RISKS Pay Off? // 2022 NOBULL CROSSFIT GAMES / Road to Madison'
     for keyword in all_keywords:
-        for dat in keyword.data:    
-            if keyword.keyword.upper() in dat['snippet']['title'] or keyword.keyword in dat['snippet']['title']:
-                print('if' , keyword.keyword)
-            else:
-                print('else', keyword.keyword)    
+        print(keyword.category, keyword.id, keyword.order_of_display)    
     # context={'most_recent': most_recent_keywords}
     return render(request, 'youtube/personality_follow.html')
 
