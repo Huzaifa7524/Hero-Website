@@ -39,6 +39,8 @@ class KeywordAdmin(ImportExportModelAdmin):
 
 class RandomVideoAdmin(admin.ModelAdmin):
     list_display = ('video_id', 'video_title')
+class RandomCategoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'category_name', 'order_of_display')
 
 # class FollowPersonalityAdmin(ImportExportModelAdmin):
 #     list_display = ('user', 'keyword')
@@ -49,3 +51,4 @@ admin.site.register(Keyword, KeywordAdmin)
 admin.site.register(AllData)
 admin.site.register(FollowPersonality)
 admin.site.register(RandomVideo, RandomVideoAdmin)
+admin.site.register(RandomCategory, RandomCategoryAdmin)

@@ -127,6 +127,9 @@ def home(request):
     for video in watchlist_videos:
         videos_id_list.append(video.video_id)
 
+    # ********************* Random Categories
+    random_categories= RandomCategory.objects.all().order_by('order_of_display')
+
     # ********************* Random Video
     random_videos = RandomVideo.objects.all()
     if not random_videos.exists():
@@ -134,7 +137,7 @@ def home(request):
         random_videos = ""
         
     # print(video_response)
-    context= {'data': paginator_list, 'watchlist_videos': videos_id_list, 'categories':categories, 'keywords_page_info':keywords, 'most_recent': most_recent_keywords, 'all_random_videos':random_videos}
+    context= {'data': paginator_list, 'watchlist_videos': videos_id_list, 'categories':categories, 'keywords_page_info':keywords, 'most_recent': most_recent_keywords, 'all_random_videos':random_videos, 'random_categories': random_categories}
     return render(request, 'youtube/home.html', context)
 
 def dummy_home_2(request):

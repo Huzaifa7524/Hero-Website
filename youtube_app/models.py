@@ -1,5 +1,6 @@
 from ast import keyword
 from pyexpat import model
+from unicodedata import category
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
@@ -39,8 +40,16 @@ class FollowPersonality(models.Model):
     def __str__(self):
         return "{0}".format(self.keyword.keyword)
 
+# Random categories
+class RandomCategory(models.Model):
+    category_name= models.CharField(max_length=40)
+    order_of_display=models.IntegerField(default=0)
+    def __str__(self):
+        return u'{0}'.format(self.category_name)
+
 # Add Random Video in Database to show on your page
 class RandomVideo(models.Model):
+    category= models.ForeignKey(RandomCategory,on_delete=models.CASCADE, blank=True, null=True)
     video_title= models.CharField(max_length=300)
     video_description= models.CharField(max_length= 600)
     video_id= models.CharField(max_length= 20)
@@ -48,6 +57,9 @@ class RandomVideo(models.Model):
     upload_date=models.CharField(max_length=100)
     channel_id= models.CharField(max_length=100)
     video_thumbnail_pic_url= models.URLField(max_length=200, default='')
+
+class HeroSection(models.Model):
+    background_image_url= models.URLField(max_length=200)
 
   
 
