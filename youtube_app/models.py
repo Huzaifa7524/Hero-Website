@@ -59,7 +59,13 @@ class RandomVideo(models.Model):
     video_thumbnail_pic_url= models.URLField(max_length=200, default='')
 
 class HeroSection(models.Model):
-    background_image_url= models.URLField(max_length=200)
+    video_title= models.CharField(max_length=300 , default='')
+    video_description= models.CharField(max_length= 600, default='')
+    video_id= models.CharField(max_length= 20, default='')
+    channel_title= models.CharField(max_length=100, default='')
+    upload_date=models.CharField(max_length=100, default='')
+    channel_id= models.CharField(max_length=100, default='')
+    background_image_url= models.URLField(max_length=200 , default='')
     
 
   

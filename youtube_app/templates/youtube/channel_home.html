@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="{% static 'youtube/css/home.css' %}">
 <link rel="stylesheet" href="{% static 'youtube/css/channel_home.css' %}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+<link rel="stylesheet" href="{% static 'youtube/css/hero_section.css' %}">
 <style>
     .hidden{
         display: none;
@@ -14,40 +15,11 @@
 </style>
 {% endblock %}
 {% block content %}
-<div class="jumbotron text-left" style="margin-bottom:0">
-    <h1>Hero Reads Here</h1>
-    <p>Watch Your Favourite Videos Here</p> 
-    <div>
-        <button class="upper_section_buttons upper_section_buttons_active">Watch Now</button>
-        <!-- <button><i class='bx bx-heart bx-md'></i></button> -->
-        <Button class="upper_section_buttons">Athletes</Button>
-    </div>
-  </div>
-<!-- <div class="jumbotron text-center" style="margin-bottom:0">
-    <h1>My First Bootstrap 4 Page</h1>
-    <p>Resize this responsive page to see the effect!</p> 
-  </div>
-  
-  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="collapsibleNavbar">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>    
-      </ul>
-    </div>  
-  </nav> -->
-<div class="upper_block_main">
+<!-- *************** Hero Section -->
+{% include 'youtube/channel_hero_section.html' %}
+
+
+  <div class="upper_block_main">
     <div class="channel_header">
       <div class="channel_header_container">
         <div class="channel_header_left">

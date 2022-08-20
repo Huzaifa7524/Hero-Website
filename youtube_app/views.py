@@ -141,8 +141,7 @@ def home(request):
         print('**************No random video')
         random_videos = ""
     # ********************** Hero section background
-    hero_section = HeroSection.objects.all().first()
-    url = 'https://d5ik1gor6xydq.cloudfront.net/sellers/38312/1643123516717223.jpg'   
+    hero_section = HeroSection.objects.all().first()   
     # print(video_response)
     context= {'data': paginator_list, 'watchlist_videos': videos_id_list, 'categories':categories, 'keywords_page_info':keywords, 'most_recent': most_recent_keywords, 'all_random_videos':random_videos, 'random_categories': random_categories, 'hero_section':hero_section}
     return render(request, 'youtube/home.html', context)
@@ -451,7 +450,9 @@ def add_to_watchlist(request):
 def watch_list_view(request):
     print('Watch list view ****************************')
     all_videos= WatchList.objects.filter(user=request.user).order_by('-id')
-    context= {'all_videos': all_videos}
+    # ********************** Hero section background
+    hero_section = HeroSection.objects.all().first() 
+    context= {'all_videos': all_videos, 'hero_section':hero_section}
     return render(request, 'youtube/watch_list.html', context)
 
 @csrf_exempt
@@ -755,7 +756,9 @@ def follow_personality(request):
     followed_list=[]
     for personality in all_followed_personality:
         followed_list.append(personality.keyword.keyword)
-    context={'all_keywords': all_keywords,'followed_list': followed_list}
+    # ********************** Hero section background
+    hero_section = HeroSection.objects.all().first() 
+    context={'all_keywords': all_keywords,'followed_list': followed_list,'hero_section':hero_section}
     return render(request, 'youtube/personality_follow.html', context)
 
 # follow a personality AJAX

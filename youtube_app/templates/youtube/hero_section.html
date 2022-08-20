@@ -5,7 +5,18 @@
     <h1>Hero Reads Here</h1>
     <p>Watch Your Favourite Videos Here</p> 
     <div>
-        <button class="upper_section_buttons upper_section_buttons_active">Watch Now</button>
-        <Button class="upper_section_buttons">More Details</Button>
+        <form action="{% url 'video_player' %}" method="post" style="display: flex;">
+            {% csrf_token %}
+            <input  hidden name="video_description" value="{{hero_section.video_description}}">
+            <input hidden name="video_title" value="{{hero_section.video_title}}">
+            <input hidden id='video_id' name="video_id" value="{{hero_section.video_id}}">
+            <input hidden name="channel_title" value="{{hero_section.channel_title}}">
+            <input hidden name="video_date" value="{{hero_section.upload_date}}">
+            <input hidden name="channel_id" value="{{hero_section.channel_id}}">
+            <input hidden name="video_thumbnail_pic" value="{{hero_section.background_image_url}}">
+            <button type="submit" class="upper_section_buttons upper_section_buttons_active">Watch Now</button>
+            <Button class="upper_section_buttons">More Details</Button>
+        </form>
+        
     </div>
 </div>
