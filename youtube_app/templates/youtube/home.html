@@ -114,8 +114,8 @@
         <input type="text" hidden name="page_number" id="page_number" value="{{keywords_page_info.number}}">
         <input type="text" hidden name="category_name" id="category_name" value="most_recent">
     
-        {% for recent in most_recent %}
-         {% for recent_data in recent.data %}  
+        
+         {% for recent_data in most_recent %}  
          <div class="video_box">
             <div class="video_box_upper">
                 <form action="{% url 'video_player' %}" method="post">
@@ -172,7 +172,7 @@
         </div>
         {% endfor %}
        
-        {% endfor %}
+       
     </div>
 </div>
 

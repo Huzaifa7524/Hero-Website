@@ -24,7 +24,7 @@ api_key_4='AIzaSyA4Mt5QJqtcTJ77BHIeFAj12M6s5mSUiFQ'
 api_key_5='AIzaSyA6aQiZykCZBYzGheYaKYdJYPKUsAQrrCs'
 api_key_6= 'AIzaSyAczxkO9D2vorvtomWQwtGLEnQ2FjmRdjk'
 
-youtube = build('youtube', 'v3', developerKey=api_key_2)
+youtube = build('youtube', 'v3', developerKey=api_key_4)
 # Create your views here.
 def register(request):
     if request.method== 'POST':
@@ -121,8 +121,14 @@ def home(request):
     # data_list= data_list+video_items
     # print(video_items)
     # ********************** All recent videos
+    most_recent_data_list=[]
     most_recent_keywords_obj= Keyword.objects.filter(most_recent=True).order_by('-id')
-    paginator_recent = Paginator(most_recent_keywords_obj,1)
+    for most_recent in most_recent_keywords_obj:
+        try:
+            most_recent_data_list = most_recent_data_list + most_recent.data
+        except:
+            pass
+    paginator_recent = Paginator(most_recent_data_list,20)
     page_recent = request.GET.get('page', 1)
     most_recent_keywords = paginator_recent.get_page(page_recent)
     watchlist_videos= WatchList.objects.filter(user=request.user)
@@ -226,7 +232,10 @@ def home_data_ajax(request):
 
         keyword_obj= Keyword.objects.filter(category__category=category_name).exclude(keyword__in=follower_keyword_list)
         for key in keyword_obj:
-            first_data_list = first_data_list+ key.data
+            try:
+                first_data_list = first_data_list+ key.data
+            except:
+                pass
         paginator = Paginator(first_data_list, 20)
         page = request.GET.get('page', next_page)
         keywords = paginator.get_page(page)
@@ -292,13 +301,21 @@ def add_data_home_onload(request):
         followed_obj= FollowPersonality.objects.filter(user=request.user,keyword__category__category=filter_category)
         if followed_obj.exists():
             for follower in followed_obj:
-                first_data_list += follower.keyword.data
+                try:
+                    first_data_list += follower.keyword.data
+                except:
+                    pass
                 follower_keyword_list.append(follower.keyword.keyword)
 
         keyword_obj= Keyword.objects.filter(category__category=filter_category).exclude(keyword__in=follower_keyword_list)
         paginator_list=[]
+        print('Keyword object', keyword_obj)
         for key in keyword_obj:
-            unfollow_keyword_data_list += key.data 
+            print(key.data)
+            try:
+                unfollow_keyword_data_list += key.data 
+            except:
+                pass
             random.shuffle(unfollow_keyword_data_list)
         first_data_list = first_data_list+ unfollow_keyword_data_list
         sorted_list = first_data_list
@@ -578,7 +595,7 @@ def auto_complete(request):
 
 def update_data_db(request):
     api_key_6= 'AIzaSyAczxkO9D2vorvtomWQwtGLEnQ2FjmRdjk'
-    youtube_db = build('youtube', 'v3', developerKey=api_key_6)
+    youtube_db = build('youtube', 'v3', developerKey=api_key_5)
     all_keywords= Keyword.objects.all()
     keyword_var=''
     data_list= []
@@ -594,19 +611,22 @@ def update_data_db(request):
         try:
             if channel_id:
                 try:
-                    print('*********Channel id api*******')
+                    print('*********Channel id api*******', channel_id)
                     video_request = youtube_db.search().list(
                         part='snippet',
                         type='video',
                         # q='Athletes,Football, Volleyball',
                         channelId= channel_id,
-                        maxResults=30,
+                        maxResults=50,
                         order= 'date'
                         
                     
                     )
                     video_response = video_request.execute()
                     video_items= video_response['items']
+                    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                    print('video Items', video_items)
+                    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                     data_list = data_list+video_items
                     keyword.data=video_items
                     keyword.save()
@@ -621,13 +641,16 @@ def update_data_db(request):
                                 type='video',
                                 # q='Athletes,Football, Volleyball',
                                 q=search_var,
-                                maxResults=30,
+                                maxResults=50,
                                 order= 'date'
                                 
                             
                             )
                             video_response = video_request.execute()
                             video_items= video_response['items']
+                            print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                            print('video Items', video_items)
+                            print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                             # ******************* If search result did not return proper result
                             if len(video_items) < 10:
                                 print('************** Len is less than 2s')
@@ -640,12 +663,64 @@ def update_data_db(request):
                                 )
                                 video_response = video_request.execute()
                                 video_items= video_response['items']
+                                print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                                print('video Items', video_items)
+                                print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                             data_list = data_list+video_items
                             keyword.data=video_items
                             keyword.save()
                     except Exception as e1:
+                        print('____________Except 1_____________________')
+                        print('************Except 1**********************', )
                         print('except 1',e1)
                         pass
+            
+            else:
+                    print('Else channel id not found')
+                    try:
+                        if keyword_var: 
+                            search_var= keyword_var+','+catgegory_var
+                            print('*********keyword api*******')   
+                            print(search_var)
+                            video_request = youtube_db.search().list(
+                                part='snippet',
+                                type='video',
+                                # q='Athletes,Football, Volleyball',
+                                q=search_var,
+                                maxResults=50,
+                                order= 'date'
+                                
+                            
+                            )
+                            video_response = video_request.execute()
+                            video_items= video_response['items']
+                            print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                            print('video Items', video_items)
+                            print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                            # ******************* If search result did not return proper result
+                            if len(video_items) < 10:
+                                print('************** Len is less than 2s')
+                                video_request = youtube_db.search().list(
+                                    part='snippet',
+                                    type='video',
+                                    q=keyword_var,
+                                    maxResults=50,
+                                    order= 'date' 
+                                )
+                                video_response = video_request.execute()
+                                video_items= video_response['items']
+                                print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                                print('video Items', video_items)
+                                print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                            data_list = data_list+video_items
+                            keyword.data=video_items
+                            keyword.save()
+                    except Exception as e1:
+                        print('____________Except 1_____________________')
+                        print('************Except 1**********************', )
+                        print('except 1',e1)
+                        pass
+            
         except Exception as e2:
             print('except 2',e2)
             pass
