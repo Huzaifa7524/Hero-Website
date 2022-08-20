@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import JsonResponse
 from django.core.paginator import Paginator
+import random
 
 
 # Youtube API Key
@@ -79,6 +80,8 @@ def home(request):
         print("category*********************************************************",category)
         try:
             first_data_list=[]
+            unfollow_keyword_data_list=[]
+            follow_keyword_data_list = []
             follower_keyword_list=[]
             followed_obj= FollowPersonality.objects.filter(user=request.user,keyword__category__category=category)
             print('followed_obj', followed_obj)
@@ -90,7 +93,9 @@ def home(request):
             keyword_obj= Keyword.objects.filter(category__category=category).exclude(keyword__in=follower_keyword_list)
             for key in keyword_obj:
                 print('Keyword', key.keyword)
-                first_data_list = first_data_list+ key.data
+                unfollow_keyword_data_list += key.data 
+                random.shuffle(unfollow_keyword_data_list)
+            first_data_list = first_data_list+ unfollow_keyword_data_list
             paginator = Paginator(first_data_list, 1)
             page = request.GET.get('page', 1)
             keywords = paginator.get_page(page)
@@ -116,7 +121,7 @@ def home(request):
     # data_list= data_list+video_items
     # print(video_items)
     # ********************** All recent videos
-    most_recent_keywords_obj= Keyword.objects.filter(most_recent=True)
+    most_recent_keywords_obj= Keyword.objects.filter(most_recent=True).order_by('-id')
     paginator_recent = Paginator(most_recent_keywords_obj,1)
     page_recent = request.GET.get('page', 1)
     most_recent_keywords = paginator_recent.get_page(page_recent)
@@ -282,7 +287,7 @@ def add_data_home_onload(request):
         print('category', filter_category)
         print('filter',filter)
         print('type_of_filter(filter)', type_of_filter(filter))
- 
+        unfollow_keyword_data_list = []
         first_data_list=[]
         follower_keyword_list=[]
         followed_obj= FollowPersonality.objects.filter(user=request.user,keyword__category__category=filter_category)
@@ -294,7 +299,9 @@ def add_data_home_onload(request):
         keyword_obj= Keyword.objects.filter(category__category=filter_category).exclude(keyword__in=follower_keyword_list)
         paginator_list=[]
         for key in keyword_obj:
-            first_data_list = first_data_list+ key.data
+            unfollow_keyword_data_list += key.data 
+            random.shuffle(unfollow_keyword_data_list)
+        first_data_list = first_data_list+ unfollow_keyword_data_list
         sorted_list = first_data_list
         paginator = Paginator(first_data_list, 20)
         page = request.GET.get('page', 1)
