@@ -135,9 +135,11 @@ def home(request):
     if not random_videos.exists():
         print('**************No random video')
         random_videos = ""
-        
+    # ********************** Hero section background
+    hero_section = HeroSection.objects.all().first()
+    url = 'https://d5ik1gor6xydq.cloudfront.net/sellers/38312/1643123516717223.jpg'   
     # print(video_response)
-    context= {'data': paginator_list, 'watchlist_videos': videos_id_list, 'categories':categories, 'keywords_page_info':keywords, 'most_recent': most_recent_keywords, 'all_random_videos':random_videos, 'random_categories': random_categories}
+    context= {'data': paginator_list, 'watchlist_videos': videos_id_list, 'categories':categories, 'keywords_page_info':keywords, 'most_recent': most_recent_keywords, 'all_random_videos':random_videos, 'random_categories': random_categories, 'hero_section':hero_section}
     return render(request, 'youtube/home.html', context)
 
 def dummy_home_2(request):

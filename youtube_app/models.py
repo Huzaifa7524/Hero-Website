@@ -60,6 +60,7 @@ class RandomVideo(models.Model):
 
 class HeroSection(models.Model):
     background_image_url= models.URLField(max_length=200)
+    
 
   
 

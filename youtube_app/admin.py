@@ -42,6 +42,16 @@ class RandomVideoAdmin(admin.ModelAdmin):
 class RandomCategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'category_name', 'order_of_display')
 
+
+class HeroAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        base_add_permission = super(HeroAdmin, self).has_add_permission(request)
+        if base_add_permission:
+            # if there's already an entry, do not allow adding
+            count = HeroSection.objects.all().count()
+            if count == 0:
+                return True
+        return False
 # class FollowPersonalityAdmin(ImportExportModelAdmin):
 #     list_display = ('user', 'keyword')
 
@@ -52,3 +62,4 @@ admin.site.register(AllData)
 admin.site.register(FollowPersonality)
 admin.site.register(RandomVideo, RandomVideoAdmin)
 admin.site.register(RandomCategory, RandomCategoryAdmin)
+admin.site.register(HeroSection, HeroAdmin)

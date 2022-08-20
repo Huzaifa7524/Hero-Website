@@ -1,5 +1,6 @@
-<link rel="stylesheet" href="{% static 'youtube/css/home.css' %}">
-<div class="jumbotron text-left" style="margin-bottom:0 ; background-image:linear-gradient(to left, rgba(245, 246, 252, -0.48), rgb(10 10 10 / 141%)),url(https://d5ik1gor6xydq.cloudfront.net/sellers/38312/1643123516717223.jpg);
+{% load static %}
+<link rel="stylesheet" href="{% static 'youtube/css/hero_section.css' %}">
+<div class="jumbotron text-left" style="margin-bottom:0 ; background-image:linear-gradient(to left, rgba(245, 246, 252, -0.48), rgb(10 10 10 / 141%)),url({{hero_section.background_image_url}});
 ">
     <h1>Hero Reads Here</h1>
     <p>Watch Your Favourite Videos Here</p> 
