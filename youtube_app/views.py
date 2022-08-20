@@ -595,7 +595,7 @@ def auto_complete(request):
 
 def update_data_db(request):
     api_key_6= 'AIzaSyAczxkO9D2vorvtomWQwtGLEnQ2FjmRdjk'
-    youtube_db = build('youtube', 'v3', developerKey=api_key_5)
+    youtube_db = build('youtube', 'v3', developerKey=api_key_6)
     all_keywords= Keyword.objects.all()
     keyword_var=''
     data_list= []
