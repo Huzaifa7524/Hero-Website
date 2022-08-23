@@ -41,3 +41,8 @@
 p{
     margin: 0 !important;
 }
+
+.video_description_video_player{
+    line-height: 2;
+    font-weight: 400;
+}

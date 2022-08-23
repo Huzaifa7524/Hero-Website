@@ -34,7 +34,7 @@
         <div class="description_block">
             <div><h3 class="channel_title"> {{channel_title}}</h3></div>
             <!-- <div> <p>{{video_description | safe}}</p></div> -->
-            <div> <h6>{{video_statistics.0.snippet.description|safe}}</h6></div>
+            <div> <h6 class="video_description_video_player">{{video_statistics.0.snippet.description|linebreaks|urlize }}</h6></div>
             
         </div>
            

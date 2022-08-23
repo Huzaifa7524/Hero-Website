@@ -274,18 +274,18 @@ def home_data_recent_ajax(request):
         print('next_page',next_page)
         print('category_name',category_name)
         # ***************************************** Most recent method
-        # most_recent_data_list=[]
-        # most_recent_keywords_obj= Keyword.objects.filter(most_recent=True).order_by('-id')
-        # for most_recent in most_recent_keywords_obj:
-        #     try:
-        #         most_recent_data_list = most_recent_data_list + most_recent.data
-        #     except:
-        #         pass
-        # most_recent_sorted_by_date =sorted(most_recent_data_list, key=lambda x: (x['snippet']['publishedAt']), reverse=True)
-        # paginator_recent = Paginator(most_recent_sorted_by_date,20)
-        # page_recent = request.GET.get('page', next_page)
-        # most_recent_keywords = paginator_recent.get_page(page_recent)
-        # print(most_recent_sorted_by_date)
+        most_recent_data_list=[]
+        most_recent_keywords_obj= Keyword.objects.filter(most_recent=True).order_by('-id')
+        for most_recent in most_recent_keywords_obj:
+            try:
+                most_recent_data_list = most_recent_data_list + most_recent.data
+            except:
+                pass
+        most_recent_sorted_by_date =sorted(most_recent_data_list, key=lambda x: (x['snippet']['publishedAt']), reverse=True)
+        paginator_recent = Paginator(most_recent_sorted_by_date,20)
+        page_recent = request.GET.get('page', next_page)
+        most_recent_keywords = paginator_recent.get_page(page_recent)
+        print(most_recent_sorted_by_date)
         # ************************************************ End
         first_data_list=[]
         keyword_obj= Keyword.objects.filter(most_recent=True)
@@ -297,8 +297,8 @@ def home_data_recent_ajax(request):
         for key in keywords:
             first_data_list = first_data_list+ key.data
         paginator_list=[]
-        paginator_list+=keywords
-        return JsonResponse({'data': first_data_list, 'page_number': next_page,'videos_id_list':videos_id_list_watchlist})
+        paginator_list+=most_recent_keywords
+        return JsonResponse({'data': paginator_list, 'page_number': next_page,'videos_id_list':videos_id_list_watchlist})
 
 # Add data in home page on load AJAX
 @csrf_exempt
