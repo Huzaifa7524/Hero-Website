@@ -46,3 +46,18 @@ p{
     line-height: 2;
     font-weight: 400;
 }
+.videos_main_div_related_videos{
+    flex-wrap: wrap;
+    display: flex;
+    /* overflow-x: scroll; */
+    justify-content: left;
+    align-items: center;
+    margin-top: 10px;
+}
+.video_box_related_videos{
+    /* cursor: pointer; */ 
+    margin: 10px;
+    /* height: 235px; */
+    overflow-y: hidden;
+    width: 18%;
+}

@@ -155,6 +155,9 @@
 
   /* showing videos in line and scrolling */
   .div_scrolling_videos{
-    display: -webkit-inline-box;
+    display: -webkit-box;
     overflow-x: scroll;
+    justify-content: left;
+    align-items: center;
+    margin-top: 10px;
   }

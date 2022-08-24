@@ -462,7 +462,7 @@ def video_view(request):
         channel_title= request.POST.get('channel_title')
         channel_profile= request.POST.get('channel_id')
         # print('video_id', video_id)
-        # *************************** To get the cahnnel profile pic
+        # *************************** To get the channel profile pic
         request_channel_snippet = youtube.channels().list(
             part='snippet',
             id=channel_profile 
@@ -485,12 +485,36 @@ def video_view(request):
         response_video_statistics = request_video_statistics.execute()
         video_statistic_items= response_video_statistics['items']
         
+        # ***************** Getting related videos *********************
+        video_request = youtube.search().list(
+        part='snippet',
+        type='video',
+        channelId= channel_profile,
+        maxResults= 50
+        ) 
+        video_reponse= video_request.execute()
+        related_videos =  video_reponse['items']
 
+        # ***************** List of videos in watchlist *************
+        watchlist_videos= WatchList.objects.filter(user=request.user)
+        videos_id_list=[]
+        for video in watchlist_videos:
+            videos_id_list.append(video.video_id)
 
         print('video_statistic_items****', video_statistic_items[0]['snippet']['description'])
         new_format = "%Y-%m-%d"
         upload_date=(d1.strftime(new_format))
-    context = {'video_description': video_description, 'video_title': video_title, 'video_id': video_id, 'channel_title': channel_title, 'channel_profile': profile_picture, 'upload_date': d1, 'video_statistics': video_statistic_items}
+    context = {
+        'video_description': video_description,
+        'video_title': video_title, 
+        'video_id': video_id, 
+        'channel_title': channel_title, 
+        'channel_profile': profile_picture, 
+        'upload_date': d1, 
+        'video_statistics': video_statistic_items,
+        'related_videos': related_videos,
+        'watchlist_videos': videos_id_list
+        }
     return render(request, 'youtube/video_player.html', context)
 
 @csrf_exempt
@@ -546,7 +570,7 @@ def channel_home_view(request):
         maxResults= 50
       ) 
         
-        # To get the cahnnel profile pic
+        # To get the channel profile pic
         request_channel_snippet = youtube.channels().list(
             part='snippet, statistics',
             id=channel_id 
