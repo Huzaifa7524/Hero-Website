@@ -172,7 +172,8 @@ def home(request):
         'all_random_videos':random_videos, 
         'random_categories': random_categories, 
         'hero_section':hero_section,
-        'followed_athletes':followed_athletes_data_list
+        'followed_athletes':followed_athletes_data_list,
+        'watchlist_videos_data': watchlist_videos
         }
     return render(request, 'youtube/home.html', context)
 

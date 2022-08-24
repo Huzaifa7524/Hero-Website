@@ -12,15 +12,22 @@
 {% endblock %}
 {% block content %}
 <!-- *************** Hero Section -->
-{% include 'youtube/hero_section.html' %}
+{% include 'youtube/hero_section/hero_section.html' %}
   
 <div class="upper_block_main">
     <h1></h1>
 </div>
 <!-- ****************** Followed athletes block ************************** -->
 {% include 'youtube/home_page_sub_files/followed_athletes_lane.html' %}
+
+<!-- ****************** Watch list block ************************** -->
+{% include 'youtube/home_page_sub_files/watchlist_lane.html' %}
+
+
 <!-- ****************** Random Videos Categories block ******************* -->
 {% include 'youtube/home_page_sub_files/random_categories_lane.html' %}
+
+
 <!-- ************************* Most Recent Block ***************************** -->
 <div class="main_container most_recent_block" >
     <div class="main_container_header">

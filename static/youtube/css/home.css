@@ -153,4 +153,8 @@
       display: block;
   }
 
-  
+  /* showing videos in line and scrolling */
+  .div_scrolling_videos{
+    display: -webkit-inline-box;
+    overflow-x: scroll;
+  }
