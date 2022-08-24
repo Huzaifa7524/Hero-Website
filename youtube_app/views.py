@@ -135,12 +135,14 @@ def home(request):
     most_recent_keywords = paginator_recent.get_page(page_recent)
     
     # *********************** Saved videos list
+   
     watchlist_videos= WatchList.objects.filter(user=request.user)
     videos_id_list=[]
     
     # ********************* Watch list videos
     for video in watchlist_videos:
         videos_id_list.append(video.video_id)
+        
 
     # ********************* Random Categories
     random_categories= RandomCategory.objects.all().order_by('order_of_display')
@@ -153,7 +155,25 @@ def home(request):
     # ********************** Hero section background
     hero_section = HeroSection.objects.all().first()   
     # print(video_response)
-    context= {'data': paginator_list, 'watchlist_videos': videos_id_list, 'categories':categories, 'keywords_page_info':keywords, 'most_recent': most_recent_keywords, 'all_random_videos':random_videos, 'random_categories': random_categories, 'hero_section':hero_section}
+
+    # ********************** Followed athletes data
+    followed_athletes_data_list = []
+    followed_athletes_obj = FollowPersonality.objects.filter(user=request.user).order_by('-id')
+    print('followed atletes**************', followed_athletes_obj )
+    for followed_athlete in followed_athletes_obj:
+        followed_athletes_data_list += followed_athlete.keyword.data
+
+    context= {
+        'data': paginator_list,
+        'watchlist_videos': videos_id_list,
+        'categories':categories, 
+        'keywords_page_info':keywords, 
+        'most_recent': most_recent_keywords, 
+        'all_random_videos':random_videos, 
+        'random_categories': random_categories, 
+        'hero_section':hero_section,
+        'followed_athletes':followed_athletes_data_list
+        }
     return render(request, 'youtube/home.html', context)
 
 def dummy_home_2(request):
@@ -316,9 +336,9 @@ def add_data_home_onload(request):
         filter_category= request.POST.get('filter_category')
         filter= request.POST.get('filter')
         filter_type=type_of_filter(filter)
-        print('category', filter_category)
-        print('filter',filter)
-        print('type_of_filter(filter)', type_of_filter(filter))
+        # print('category', filter_category)
+        # print('filter',filter)
+        # print('type_of_filter(filter)', type_of_filter(filter))
         unfollow_keyword_data_list = []
         first_data_list=[]
         follower_keyword_list=[]
@@ -334,9 +354,9 @@ def add_data_home_onload(request):
             
         keyword_obj= Keyword.objects.filter(category__category=filter_category).exclude(keyword__in=follower_keyword_list)
         paginator_list=[]
-        print('Keyword object', keyword_obj)
+        # print('Keyword object', keyword_obj)
         for key in keyword_obj:
-            print(key.data)
+            # print(key.data)
             try:
                 unfollow_keyword_data_list += key.data 
             except:
@@ -349,8 +369,8 @@ def add_data_home_onload(request):
         page = request.GET.get('page', 1)
         keywords = paginator.get_page(page)
         
-        for key_d in keywords:
-            print('Data', key_d)
+        # for key_d in keywords:
+        #     print('Data', key_d)
         paginator_list+=keywords
         # print(sorted_list)
     return JsonResponse({'data': paginator_list, 'videos_id_list':videos_id_list_watchlist})
