@@ -23,6 +23,7 @@ class Keyword(models.Model):
     category= models.ForeignKey(Category, on_delete=models.CASCADE)
     keyword= models.CharField(max_length=50, null= True, blank=True)
     channel_id= models.CharField(max_length=100, default= '', null= True, blank= True)
+    image = models.ImageField(verbose_name='Image',null=True, blank=True, upload_to="upload_images/")
     data=models.JSONField(null= True, blank=True)
     most_recent= models.BooleanField(default=True)
     def __str__(self):
@@ -57,6 +58,8 @@ class RandomVideo(models.Model):
     upload_date=models.CharField(max_length=100)
     channel_id= models.CharField(max_length=100)
     video_thumbnail_pic_url= models.URLField(max_length=200, default='')
+    video_thumbnail_pic_local = models.ImageField(verbose_name='Thumbnail Image',null=True, blank=True, upload_to="upload_images/")
+    
 
 class HeroSection(models.Model):
     video_title= models.CharField(max_length=300 , default='')
@@ -69,6 +72,21 @@ class HeroSection(models.Model):
     
 
   
+# Athletes Profile
+# 1- Athletes profile categories
+class AthleteProfileCategory(models.Model):
+    category_name = models.CharField(max_length=300, default='')
+    def __str__(self) :
+        return str(self.category_name)
+
+class AthleteProfile(models.Model):
+    keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
+    avatar_image = models.ImageField(verbose_name='Avatar',null=True, blank=True, upload_to="upload_images/")
+    banner_image = models.ImageField(verbose_name='Banner Image',null=True, blank=True, upload_to="upload_images/")
+    age = models.IntegerField()
+    country = models.CharField(max_length=200)
+    experience = models.CharField(max_length=400)
+    bio = models.CharField(max_length=500)
 
 
 

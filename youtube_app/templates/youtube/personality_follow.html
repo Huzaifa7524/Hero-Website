@@ -40,7 +40,13 @@
           <div class="personality_header_container">
             <div class="personality_header_left">
               <div class="personality_profile_pic">
+                <!-- <img class="personality_profile_image" src="{% static 'user/images/blank-profile-picture.png' %}" alt="{{video_title | safe}}" style="width:85px"> -->
+                {% if keyword.image %}
+                <img class="personality_profile_image" src="{{keyword.image.url}}" alt="{{video_title | safe}}" style="width:85px">
+                {% else %}
                 <img class="personality_profile_image" src="{% static 'user/images/blank-profile-picture.png' %}" alt="{{video_title | safe}}" style="width:85px">
+                
+                {% endif %}
               </div>
               <div class="personality_title_container">
                     {% if keyword.keyword %}
