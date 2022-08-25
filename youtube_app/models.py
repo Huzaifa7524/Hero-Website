@@ -89,5 +89,8 @@ class AthleteProfile(models.Model):
     bio = models.CharField(max_length=500)
 
 
+    def __str__(self) :
+        return str(self.keyword.keyword)
+
 
 
