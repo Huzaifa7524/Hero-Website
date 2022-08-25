@@ -11,15 +11,15 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 {% endblock %}
 {% block content %}
-<!-- *************** Hero Section -->
+<!-- ***************Upper Block -->
 {% include 'youtube/athlete_profile/follow_athlete_upper_block.html' %}
  
 
 <!-- ************************* Youtube API Categories Block ************************* -->
-<!-- {% for i in categories %} -->
+
 <div class="main_container" >
     <div class="main_container_header">
-        <div><h1 class="categories_title"> Title{{i.category}}</h1></div>
+        <div><h1 class="categories_title"> Title</h1></div>
       
     </div>
     
@@ -27,27 +27,29 @@
      
         
         
-        {% for dat in data %}
+     
            
-         {% if dat.snippet.title|VideoCategory == i.category  %}   
+         
         <div class="video_box ">
             <div class="video_box_upper">
                 <div style="margin-bottom: 5px;">    
-                    <img src="{{dat.snippet.thumbnails.high.url}}" alt="" width="100%">
+                    <img src="{% static 'user/images/blank-profile-picture.png' %}" alt="" width="100%">
                 </div>
              
     
             </div>
             
             <div class="watch_list_block">
+                
+                <p  class="channel_video_title" onclick="script: $(this).parent('form').submit()" style="cursor: pointer; margin: 0;">Channel Ti</p>
                      <div >
                         {% if dat.id.videoId in watchlist_videos %}
-                        <button type="button" class="unsave_button  "><box-icon name='bookmark' type='solid' ></box-icon></button>
-                        <button type="button"  class="save_button hidden"><i class='bx bx-bookmark nav_icon'></i></button>
+                        <button type="button" class="unsave_button btn_follow  "><box-icon name='bookmark' type='solid' ></box-icon></button>
+                        <button type="button"  class="save_button hidden btn_follow"><i class='bx bx-bookmark nav_icon'></i></button>
                         
                         {% else %}
-                        <button type="button"  class="unsave_button hidden"><box-icon name='bookmark' type='solid' ></box-icon></button>
-                        <button type="button" class="save_button"><i class='bx bx-bookmark nav_icon'></i></button>
+                        <button type="button"  class="unsave_button hidden btn_follow" hidden>Unfollow</button>
+                        <button type="button" class="save_button btn_follow">Follow</button>
                         {% endif %}
                     </div>     
             </div>
@@ -56,12 +58,11 @@
         </div>
         
         
-        {% endif %}
        
-        {% endfor %}
+       
     </div>
 </div>
-{% endfor %}
+
 {% include 'youtube/JS_work/filtering_videos_javascript.html' %}
 {% include 'youtube/JS_work/adding_data_on_scrolling_js.html' %}
 {% include 'youtube/JS_work/most_recent_on_scroll_js.html' %}
