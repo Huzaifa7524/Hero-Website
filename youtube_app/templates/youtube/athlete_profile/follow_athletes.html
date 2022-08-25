@@ -4,7 +4,7 @@
 {% load VideoCategory %}
 {% load VideoCategoryChannelId %}
 {% load VideoCategorychanneltitle %}
-{% block title %} youtube-home{% endblock %}
+{% block title %} Follow Favourite Athletes{% endblock %}
 {% block extrastylesheet %}
 <link rel="stylesheet" href="{% static 'youtube/css/home.css' %}">
 <link rel="stylesheet" href="{% static 'youtube/css/parts_css/filter_dropdown.css' %}">
@@ -19,7 +19,7 @@
 
 <div class="main_container" >
     <div class="main_container_header">
-        <div><h1 class="categories_title"> Title</h1></div>
+        <div><h1 class="categories_title"> Athletes</h1></div>
       
     </div>
     
@@ -28,20 +28,25 @@
         
         
      
-           
+        {% for athlete in all_athletes %}
          
         <div class="video_box ">
-            <div class="video_box_upper">
+            <div class="video_box_upper" onclick="script: $(this).siblings('form').submit()">
                 <div style="margin-bottom: 5px;">    
-                    <img src="{% static 'user/images/blank-profile-picture.png' %}" alt="" width="100%">
+                    <img src="{{athlete.avatar_image.url}}" alt="" width="100%">
                 </div>
              
     
             </div>
+            <form action="{% url 'athlete_profile' %}" method="post">
+                {% csrf_token %}
+                <input hidden class="athlete_keyword" name="athlete_keyword" value="{{athlete.keyword.keyword}}">
+            </form>
             
             <div class="watch_list_block">
                 
-                <p  class="channel_video_title" onclick="script: $(this).parent('form').submit()" style="cursor: pointer; margin: 0;">Channel Ti</p>
+                   <p  class="channel_video_title" onclick="script: $(this).parent('form').submit()" style="cursor: pointer; margin: 0;">{{athlete.keyword.keyword}}</p>
+                
                      <div >
                         {% if dat.id.videoId in watchlist_videos %}
                         <button type="button" class="unsave_button btn_follow  "><box-icon name='bookmark' type='solid' ></box-icon></button>
@@ -56,6 +61,7 @@
             
     
         </div>
+        {% endfor %}
         
         
        

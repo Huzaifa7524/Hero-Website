@@ -1,0 +1,33 @@
+.upper_block_main{
+    width: 100%;
+    height: 302px;
+    background-size: cover;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;margin-bottom:0 ; 
+    background: linear-gradient(45deg, black, transparent);
+  }
+  .watch_list_block{
+    align-items: center;
+  }
+  .btn_follow{
+    background: #fdd74d !important;
+    font-size: 10px !important;
+    border-radius: 18px !important;
+    font-weight: 700 !important;
+  }
+  .jumbotron{
+    width: 100%;
+    height: 532px;
+    background-size: cover;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: 0;
+    flex-direction: column;
+    justify-content: center;
+  }

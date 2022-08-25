@@ -37,7 +37,8 @@ urlpatterns = [
     
 
     # Follow Athletes
-    path('follow_athletes/', views.follow_athlete, name='follow_athlete'),
+    path('follow_athletes/', views.follow_athlete, name='follow_athletes'),
+    path('athlete_profile/', views.athlete_profile, name='athlete_profile'),
     # for testing purposes
     path('test/', views.test, name='test'),
     

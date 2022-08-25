@@ -1035,7 +1035,32 @@ def test(request):
 
 # Athletes Profile views
 def follow_athlete(request):
-    return render(request, 'youtube/athlete_profile/follow_athletes.html')
+    all_athletes = AthleteProfile.objects.all()
+    categories = Category.objects.all()
+    context = {'all_athletes': all_athletes,'categories':categories}
+    return render(request, 'youtube/athlete_profile/follow_athletes.html', context)
+
+def athlete_profile(request):
+    if request.method == 'POST':
+        athlete_keyword = request.POST.get('athlete_keyword')
+        print('Athlete Keyword', athlete_keyword)
+        keyword_objects = Keyword.objects.filter(keyword = athlete_keyword )
+        keyword_obj = keyword_objects[0]
+        athlete = AthleteProfile.objects.filter(keyword = keyword_obj)
+        # *********************** Saved videos list
+   
+        watchlist_videos= WatchList.objects.filter(user=request.user)
+        videos_id_list=[]
+        
+        # ********************* Watch list videos
+        for video in watchlist_videos:
+            videos_id_list.append(video.video_id)
+        print('Athlete', athlete)
+        context = {
+            'athlete': athlete[0],
+            'watchlist_videos_data': watchlist_videos
+        }
+    return render(request, 'youtube/athlete_profile/athlete_profile.html', context)
 
 # ********************** Functions To use for different Operations
 # Yield successive n-sized
