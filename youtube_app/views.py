@@ -1033,6 +1033,10 @@ def test(request):
     return render(request, 'youtube/personality_follow.html')
 
 
+# Athletes Profile views
+def follow_athlete(request):
+    return render(request, 'youtube/athlete_profile/follow_athletes.html')
+
 # ********************** Functions To use for different Operations
 # Yield successive n-sized
 # chunks from l.
