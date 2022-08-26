@@ -48,13 +48,14 @@
                    <p  class="channel_video_title" onclick="script: $(this).parent('form').submit()" style="cursor: pointer; margin: 0;">{{athlete.keyword.keyword}}</p>
                 
                      <div >
+                        <input hidden class="athlete_keyword" value="{{athlete.keyword.keyword}}">
                         {% if dat.id.videoId in watchlist_videos %}
-                        <button type="button" class="unsave_button btn_follow  "><box-icon name='bookmark' type='solid' ></box-icon></button>
-                        <button type="button"  class="save_button hidden btn_follow"><i class='bx bx-bookmark nav_icon'></i></button>
+                        <button type="button" class="unsave_button btn_follow  ">Unfollow</button>
+                        <button type="button"  class="save_button hidden btn_follow"onclick="follow_athlete(this)">Follow</button>
                         
                         {% else %}
-                        <button type="button"  class="unsave_button hidden btn_follow" hidden>Unfollow</button>
-                        <button type="button" class="save_button btn_follow">Follow</button>
+                        <button type="button"  class="unsave_button hidden btn_follow">Unfollow</button>
+                        <button type="button" class="save_button btn_follow" onclick="follow_athlete(this)">Follow</button>
                         {% endif %}
                     </div>     
             </div>

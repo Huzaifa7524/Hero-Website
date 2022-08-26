@@ -1,0 +1,63 @@
+<script>
+function follow_athlete(save_element) {
+    var $this = $(save_element);
+    $.ajax({ 
+          method: "POST",
+          url: `/follow_athlete_ajax_call/`,
+          data: {
+        'follow_athlete_keyword': $this.siblings('.athlete_keyword').val(),    
+      },
+          success:function(response){
+            // $this.parent('div').html("<box-icon name='bookmark' type='solid' ></box-icon>")
+            // $this.parent('div').html("<button type='button' class='unsave_button'><box-icon name='bookmark' type='solid' ></box-icon></button>")
+            // $this.removeClass('save_button')
+            // $this.addClass('unsave_button')
+            $this.addClass('hidden')
+            $this.siblings().removeClass('hidden')
+            console.log('save response', response)
+            
+            
+            
+      
+          },
+          error:function(){
+              console.log('save url is not working')
+          }
+        });
+  }
+
+  function unsave_video(unsave_element) {
+    var $this = $(unsave_element);
+    $.ajax({ 
+        method: "POST",
+        url: `/deletewatchlist/`,
+        data: {
+     
+      'video_id': $this.parent('div').siblings('.video_id').val(),
+    
+      
+    },
+        success:function(response){
+          // $this.html("<i class='bx bx-bookmark nav_icon'></i>")
+          // $this.removeClass('unsave_button')
+          // $this.addClass('save_button')
+          // $this.parent('div').html("<button type='button' class='save_button'><i class='bx bx-bookmark nav_icon'></i></button>")
+          $this.addClass('hidden')
+          $this.siblings().removeClass('hidden')
+
+          console.log('unsave response', response)
+          
+          
+          
+    
+        },
+        error:function(){
+            console.log('unsave url is not working')
+        }
+      });
+  }
+</script>
+
+
+
+

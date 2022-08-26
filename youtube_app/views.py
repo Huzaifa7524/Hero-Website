@@ -1062,6 +1062,18 @@ def athlete_profile(request):
         }
     return render(request, 'youtube/athlete_profile/athlete_profile.html', context)
 
+# Follow an athlete using AJAX
+def follow_athlete_ajax(request):
+    if request.method == 'POST':
+        follow_athlete_keyword=request.POST.get('follow_athlete_keyword')
+        print('AJAX follow athlete keyword', follow_athlete_keyword)
+        try:
+            pass
+        except:
+            pass
+
+    return HttpResponse('success')
+
 # ********************** Functions To use for different Operations
 # Yield successive n-sized
 # chunks from l.

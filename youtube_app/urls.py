@@ -36,9 +36,12 @@ urlpatterns = [
     path('unfollow_personality/', views.unfollow_personality_ajax, name='unfollow_personality'),
     
 
-    # Follow Athletes
+    #  Athletes profile
     path('follow_athletes/', views.follow_athlete, name='follow_athletes'),
     path('athlete_profile/', views.athlete_profile, name='athlete_profile'),
+
+    # Follow an athlete AJAX
+    path('follow_athlete_ajax_call/', views.follow_athlete_ajax, name='follow_athlete_ajax_call'),
     # for testing purposes
     path('test/', views.test, name='test'),
     

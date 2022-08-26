@@ -92,5 +92,9 @@ class AthleteProfile(models.Model):
     def __str__(self) :
         return str(self.keyword.keyword)
 
+class FollowedAthletes(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    followed_athlete = models.ForeignKey(AthleteProfile, on_delete=models.CASCADE)
+
 
 
