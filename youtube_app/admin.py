@@ -36,6 +36,11 @@ class KeywordAdmin(ImportExportModelAdmin):
     list_display = ('id','category', 'keyword', 'channel_id', 'most_recent')
     list_filter = ('most_recent',)
     actions = [remove_recent]
+    # ******************** For filtering categories which have is_random field True
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(KeywordAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['category'].queryset = Category.objects.filter(is_random = 'False')
+        return form
     # resource_class = KeywordResource
 
 class RandomVideoAdmin(admin.ModelAdmin):
