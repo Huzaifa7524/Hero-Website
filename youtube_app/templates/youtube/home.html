@@ -24,8 +24,8 @@
 {% include 'youtube/home_page_sub_files/watchlist_lane.html' %}
 
 
-<!-- ****************** Random Videos Categories block ******************* -->
-{% include 'youtube/home_page_sub_files/random_categories_lane.html' %}
+<!-- ****************** Random Videos Categories block (Not included) ******************* -->
+<!-- {% include 'youtube/home_page_sub_files/random_categories_lane.html' %} -->
 
 
 <!-- ************************* Most Recent Block ***************************** -->
@@ -119,7 +119,9 @@
         <div><h1 class="categories_title"> {{i.category}}</h1></div>
         <div>
             <div class="dropdown">
+                {% if not i.is_random %}
                 <button onclick="filter_dropdown(this)" class="dropbtn"><i class='bx bx-filter bx-md nav_icon'></i></button>
+                {% endif %}
                 <div id="filter_dropdown_block" class="dropdown-content filter_dropdown_block">
                     <input type="text" name="" id="filter_category" value="{{i.category}}" hidden>
                     {% if not i.is_random %}

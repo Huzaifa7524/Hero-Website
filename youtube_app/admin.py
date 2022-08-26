@@ -19,6 +19,7 @@ class KeywordResource(resources.ModelResource):
 
     class Meta:
         model = Keyword
+# ************* Filter to make most_recent = False for all quersets 
 @admin.action(description='Remove videos from most recent')
 def remove_recent(modeladmin, request, queryset):
     queryset.update(most_recent='False')
@@ -39,6 +40,11 @@ class KeywordAdmin(ImportExportModelAdmin):
 
 class RandomVideoAdmin(admin.ModelAdmin):
     list_display = ('video_id', 'video_title')
+    # ******************** For filtering categories which have is_random field True
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(RandomVideoAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['category'].queryset = Category.objects.filter(is_random = 'True')
+        return form
 class RandomCategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'category_name', 'order_of_display')
 
@@ -54,6 +60,7 @@ class HeroAdmin(admin.ModelAdmin):
         return False
 # class FollowPersonalityAdmin(ImportExportModelAdmin):
 #     list_display = ('user', 'keyword')
+
 
 admin.site.register(WatchList, WatchListAdmin)
 admin.site.register(Category,CategoryAdmin)
