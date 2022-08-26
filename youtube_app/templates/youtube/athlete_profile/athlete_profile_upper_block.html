@@ -11,33 +11,26 @@
     <h1>{{athlete.keyword.keyword}}</h1>
     <p>{{athlete.age}}, {{athlete.country}}, {{athlete.experience}}</p> 
     <p style="margin-top: 10px;">{{athlete.bio}}</p>
-    <div>
-        <!-- The Modal -->
+    <div class="watch_list_block">
+                
         
-  
-       
-            <button type="button" class="upper_section_buttons upper_section_buttons_active" >Follow</button>
-         
-       
-        
+     
+          <div >
+             <input hidden class="athlete_keyword" value="{{athlete.keyword.keyword}}">
+             {% if athlete.keyword.keyword in followed_athletes_list %}
+             <button type="button" class=" upper_section_buttons upper_section_buttons_active btn_follow  " onclick="unfollow_athlete(this)">Unfollow</button>
+             <button type="button"  class="upper_section_buttons upper_section_buttons_active  hidden btn_follow"onclick="follow_athlete(this)">Follow</button>
+             
+             {% else %}
+             <button type="button"  class="upper_section_buttons upper_section_buttons_active  hidden btn_follow" onclick="unfollow_athlete(this)">Unfollow</button>
+             <button type="button" class="upper_section_buttons upper_section_buttons_active  btn_follow" onclick="follow_athlete(this)">Follow</button>
+             {% endif %}
+         </div>     
     </div>
+   
 
 </div>
 <script>
-    var stopAllYouTubeVideos = () => { 
-  var iframes = document.querySelectorAll('iframe');
-  Array.prototype.forEach.call(iframes, iframe => { 
-    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', 
-  func: 'stopVideo' }), '*');
- });
-}
-    $("#close_btn").click(function(){
-        console.log('click close')
-        $('.yt_player_iframe').each(function(){
-            console.log('in player')
-        var el_src = $(this).attr("src");
-        $(this).attr("src",el_src);
-      });
-    });
+
     
 </script>

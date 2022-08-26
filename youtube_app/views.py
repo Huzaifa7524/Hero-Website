@@ -1044,6 +1044,9 @@ def follow_athlete(request):
     for athlete in followed_athletes:
         follow_athlete_list.append(athlete.followed_athlete.keyword.keyword)
     print('AThletes list', follow_athlete_list)
+
+
+
     all_athletes = AthleteProfile.objects.all()
     categories = Category.objects.all()
     context = {
@@ -1069,9 +1072,21 @@ def athlete_profile(request):
         for video in watchlist_videos:
             videos_id_list.append(video.video_id)
         print('Athlete', athlete)
+
+
+        followed_athletes= FollowedAthletes.objects.filter(user=request.user)
+        follow_athlete_list=[]
+        
+        # ********************* FOllowed athletes
+        for followed_athlete in followed_athletes:
+            follow_athlete_list.append(followed_athlete.followed_athlete.keyword.keyword)
+        print('AThletes list', follow_athlete_list)
+
+
         context = {
             'athlete': athlete[0],
-            'watchlist_videos_data': watchlist_videos
+            'watchlist_videos_data': watchlist_videos,
+            'followed_athletes_list':follow_athlete_list
         }
     return render(request, 'youtube/athlete_profile/athlete_profile.html', context)
 
