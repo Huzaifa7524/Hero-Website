@@ -6,10 +6,10 @@ $('.Athlete, .Brand, .Competition, .Influencer, .Nutrition, .Podcast, .Training,
     var currPos = $(this).scrollLeft();
 
     if (lastPos < currPos) {
-        console.log('Right', lastPos)
-        console.log('width', $(this).outerWidth())
+        // console.log('Right', lastPos)
+        // console.log('width', $(this).outerWidth())
         var $scrollWidth = $(this)[0].scrollWidth; 
-        console.log('scroll width',$scrollWidth)
+        // console.log('scroll width',$scrollWidth)
         var diff = Math.abs( $scrollWidth - 1400 );
         if (lastPos > diff ){
 

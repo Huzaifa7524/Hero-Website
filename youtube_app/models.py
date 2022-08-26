@@ -43,11 +43,11 @@ class FollowPersonality(models.Model):
         return "{0}".format(self.keyword.keyword)
 
 # Random categories
-class RandomCategory(models.Model):
-    category_name= models.CharField(max_length=40)
-    order_of_display=models.IntegerField(default=0)
-    def __str__(self):
-        return u'{0}'.format(self.category_name)
+# class RandomCategory(models.Model):
+    # category_name= models.CharField(max_length=40)
+    # order_of_display=models.IntegerField(default=0)
+    # def __str__(self):
+    #     return u'{0}'.format(self.category_name)
 
 # Add Random Video in Database to show on your page
 class RandomVideo(models.Model):

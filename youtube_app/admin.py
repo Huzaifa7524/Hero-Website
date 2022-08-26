@@ -45,8 +45,8 @@ class RandomVideoAdmin(admin.ModelAdmin):
         form = super(RandomVideoAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['category'].queryset = Category.objects.filter(is_random = 'True')
         return form
-class RandomCategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'category_name', 'order_of_display')
+# class RandomCategoryAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'category_name', 'order_of_display')
 
 
 class HeroAdmin(admin.ModelAdmin):
@@ -68,7 +68,7 @@ admin.site.register(Keyword, KeywordAdmin)
 admin.site.register(AllData)
 admin.site.register(FollowPersonality)
 admin.site.register(RandomVideo, RandomVideoAdmin)
-admin.site.register(RandomCategory, RandomCategoryAdmin)
+# admin.site.register(RandomCategory, RandomCategoryAdmin)
 admin.site.register(HeroSection, HeroAdmin)
 admin.site.register(AthleteProfile)
 admin.site.register(AthleteProfileCategory)

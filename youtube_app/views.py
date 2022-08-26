@@ -24,7 +24,7 @@ api_key_4='AIzaSyA4Mt5QJqtcTJ77BHIeFAj12M6s5mSUiFQ'
 api_key_5='AIzaSyA6aQiZykCZBYzGheYaKYdJYPKUsAQrrCs'
 api_key_6= 'AIzaSyAczxkO9D2vorvtomWQwtGLEnQ2FjmRdjk'
 
-youtube = build('youtube', 'v3', developerKey=api_key_5)
+youtube = build('youtube', 'v3', developerKey=api_key_2)
 # Create your views here.
 def register(request):
     if request.method== 'POST':
@@ -146,9 +146,7 @@ def home(request):
         videos_id_list.append(video.video_id)
         
 
-    # ********************* Random Categories
-    random_categories= RandomCategory.objects.all().order_by('order_of_display')
-
+    
     # ********************* Random Video
     random_videos = RandomVideo.objects.all()
     if not random_videos.exists():
@@ -172,7 +170,6 @@ def home(request):
         'keywords_page_info':keywords, 
         'most_recent': most_recent_keywords, 
         'all_random_videos':random_videos, 
-        'random_categories': random_categories, 
         'hero_section':hero_section,
         'followed_athletes':followed_athletes_data_list,
         'watchlist_videos_data': watchlist_videos
@@ -744,10 +741,13 @@ def update_data_db(request):
                             keyword.data=video_items
                             keyword.save()
                     except Exception as e1:
+
                         print('____________Except 1_____________________')
                         print('************Except 1**********************', )
                         print('except 1',e1)
-                        pass
+                        api_key_6= 'AIzaSyAzaAIFiU2QKcD4sqC47j-I9-0fAk3awHw'
+                        youtube_db = build('youtube', 'v3', developerKey=api_key_6)
+                        
             
             else:
                     print('Else channel id not found')
@@ -793,7 +793,9 @@ def update_data_db(request):
                         print('____________Except 1_____________________')
                         print('************Except 1**********************', )
                         print('except 1',e1)
-                        pass
+                        api_key_6= 'AIzaSyAzaAIFiU2QKcD4sqC47j-I9-0fAk3awHw'
+                        youtube_db = build('youtube', 'v3', developerKey=api_key_6)
+                        
             
         except Exception as e2:
             print('except 2',e2)
