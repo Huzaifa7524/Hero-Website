@@ -78,44 +78,46 @@ def home(request):
     index=0
     for category in categories:
         print("category*********************************************************",category)
-        try:
-            first_data_list=[]
-            unfollow_keyword_data_list=[]
-            follow_keyword_data_list = []
-            follower_keyword_list=[]
-            followed_obj= FollowPersonality.objects.filter(user=request.user,keyword__category__category=category)
-            print('followed_obj', followed_obj)
-            if followed_obj.exists():
-                for follower in followed_obj:
-                    first_data_list += follower.keyword.data
-                    follower_keyword_list.append(follower.keyword.keyword)
-                follower_keyword_list = sorted(follower_keyword_list, key=lambda x: (x['snippet']['publishedAt']), reverse=True)
-            keyword_obj= Keyword.objects.filter(category__category=category).exclude(keyword__in=follower_keyword_list)
-            for key in keyword_obj:
-                print('Keyword', key.keyword)
-                unfollow_keyword_data_list += key.data 
-                random.shuffle(unfollow_keyword_data_list)
-            unfollow_keyword_data_list = sorted(unfollow_keyword_data_list, key=lambda x: (x['snippet']['publishedAt']), reverse=True)
-            first_data_list = first_data_list+ unfollow_keyword_data_list
-            paginator = Paginator(first_data_list, 1)
-            page = request.GET.get('page', 1)
-            keywords = paginator.get_page(page)
+        if not category.is_random:
+            print("category*********************************************************",category)
+            try:
+                first_data_list=[]
+                unfollow_keyword_data_list=[]
+                follow_keyword_data_list = []
+                follower_keyword_list=[]
+                followed_obj= FollowPersonality.objects.filter(user=request.user,keyword__category__category=category)
+                print('followed_obj', followed_obj)
+                if followed_obj.exists():
+                    for follower in followed_obj:
+                        first_data_list += follower.keyword.data
+                        follower_keyword_list.append(follower.keyword.keyword)
+                    follower_keyword_list = sorted(follower_keyword_list, key=lambda x: (x['snippet']['publishedAt']), reverse=True)
+                keyword_obj= Keyword.objects.filter(category__category=category).exclude(keyword__in=follower_keyword_list)
+                for key in keyword_obj:
+                    print('Keyword', key.keyword)
+                    unfollow_keyword_data_list += key.data 
+                    random.shuffle(unfollow_keyword_data_list)
+                unfollow_keyword_data_list = sorted(unfollow_keyword_data_list, key=lambda x: (x['snippet']['publishedAt']), reverse=True)
+                first_data_list = first_data_list+ unfollow_keyword_data_list
+                paginator = Paginator(first_data_list, 1)
+                page = request.GET.get('page', 1)
+                keywords = paginator.get_page(page)
+                
+                for key_d in keywords:
+                    print('Data', key_d)
+                paginator_list+=keywords
+                
+                obj_1=keyword_obj[0]
+                # obj_2=keyword_obj[1]
+                # print('keyword obj',obj_2)
             
-            for key_d in keywords:
-                print('Data', key_d)
-            paginator_list+=keywords
-            
-            obj_1=keyword_obj[0]
-            # obj_2=keyword_obj[1]
-            # print('keyword obj',obj_2)
-        
-            data_list= data_list+obj_1.data
-            # data_list= data_list+obj_2.data
-            
-            index+=1
-        except Exception as e:
-            print(e)
-            pass
+                data_list= data_list+obj_1.data
+                # data_list= data_list+obj_2.data
+                
+                index+=1
+            except Exception as e:
+                print(e)
+                pass
     # print('Paginator', paginator_list)
     # all_data_obj=Keyword.objects.get(id=1)
     # data_list=data_list+all_data_obj.data
@@ -529,6 +531,7 @@ def add_to_watchlist(request):
         d1 = datetime.datetime.strptime(video_date,"%Y-%m-%dT%H:%M:%SZ")
         channel_profile = request.POST.get('channel_profile')
         video_thumbnail_pic = request.POST.get('video_thumbnail_pic')
+        print('VIdeo thumbnail*********', video_thumbnail_pic)
         WatchListobj= WatchList.objects.create(user= request.user, video_title=video_title, video_description=video_description, video_id=video_id,channel_title=channel_title, upload_date=video_date,channel_profile_pic=channel_profile,video_thumbnail_pic= video_thumbnail_pic)
         WatchListobj.save()
         print('****************************** Ajax Req', video_description)

@@ -122,7 +122,9 @@
                 <button onclick="filter_dropdown(this)" class="dropbtn"><i class='bx bx-filter bx-md nav_icon'></i></button>
                 <div id="filter_dropdown_block" class="dropdown-content filter_dropdown_block">
                     <input type="text" name="" id="filter_category" value="{{i.category}}" hidden>
+                    {% if not i.is_random %}
                     <a  class=" onload_filter" hidden>Onload</a>
+                    {% endif %}
                     <a  class="filter_dropdown_input ">Default</a>
                     <a  class="filter_dropdown_input">Likes</a>
                     <a  class="filter_dropdown_input">Comments</a>
@@ -136,13 +138,17 @@
     <div class="videos_main_div {{i.category|cut:' '}}" >
         <input type="text" hidden name="page_number" id="page_number" value="{{keywords_page_info.number}}">
         <input type="text" hidden name="category_name" id="category_name" value="{{i.category}}">
+        {% if not i.is_random %}
         <div class="home_page_loader_block">
             <div class="loader"></div>
         </div>
+        {% endif %}
         
+        {% if i.is_random %}
+        {% include 'youtube/home_page_sub_files/random_videos_lane_in_categories.html' %}
+        {% else %}
         {% for dat in data %}
-           
-         {% if dat.snippet.title|VideoCategory == i.category  %}   
+        {% if dat.snippet.title|VideoCategory == i.category  %}   
         <div class="video_box hidden">
             <div class="video_box_upper">
                 <form action="{% url 'video_player' %}" method="post">
@@ -197,11 +203,9 @@
             
     
         </div>
-        
-        
         {% endif %}
-       
         {% endfor %}
+        {% endif %}
     </div>
 </div>
 {% endfor %}

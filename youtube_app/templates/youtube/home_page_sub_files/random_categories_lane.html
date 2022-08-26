@@ -24,10 +24,20 @@
                         <input hidden name="channel_title" value="{{video.channel_title}}">
                         <input hidden name="video_date" value="{{video.upload_date}}">
                         <input hidden name="channel_id" value="{{video.channel_id}}">
+                        {% if video.video_thumbnail_pic_local %}
+                        <input hidden name="video_thumbnail_pic" value="{{video.video_thumbnail_pic_local.url}}">
+                        {% else %}
                         <input hidden name="video_thumbnail_pic" value="{{video.video_thumbnail_pic_url}}">
+                        {% endif %}
+
                     </form>
-                    <div style="margin-bottom: 5px;">    
+                    <div style="margin-bottom: 5px;">
+                        {% if video.video_thumbnail_pic_local %}   
+                        <img src="{{video.video_thumbnail_pic_local.url}}" alt="" width="100%"> 
+                        {% else %}
                         <img src="{{video.video_thumbnail_pic_url}}" alt="" width="100%">
+                        {% endif %}
+
                     </div>
                     <div class="title_box">
             
@@ -49,7 +59,11 @@
                     <input hidden class="channel_title"      name="channel_title" value="{{video.channel_title}}">
                     <input hidden class="video_date"         name="video_date" value="{{video.upload_date}}">
                     <input hidden class="channel_id"         name="channel_id" value="{{video.channel_id}}">
-                    <input hidden class="video_thumbnail_pic"name="video_thumbnail_pic" value="{{video.video_thumbnail_pic_url}}">
+                    {% if video.video_thumbnail_pic_local %}   
+                    <input hidden class="video_thumbnail_pic"name="video_thumbnail_pic" value="{{video.video_thumbnail_pic_local.url}}">
+                        {% else %}
+                        <input hidden class="video_thumbnail_pic"name="video_thumbnail_pic" value="{{video.video_thumbnail_pic_url}}">
+                        {% endif %}
                     <div >
                         {% if video.video_id in watchlist_videos %}
                         <button type="button" class="unsave_button  "><box-icon name='bookmark' type='solid' ></box-icon></button>

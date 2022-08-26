@@ -12,7 +12,7 @@ class WatchListAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'category', 'order_of_display')
+    list_display = ('id', 'category', 'order_of_display', 'is_random')
 
 
 class KeywordResource(resources.ModelResource):
