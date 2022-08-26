@@ -1035,9 +1035,22 @@ def test(request):
 
 # Athletes Profile views
 def follow_athlete(request):
+    # *********************** FOllowed athletes list
+   
+    followed_athletes= FollowedAthletes.objects.filter(user=request.user)
+    follow_athlete_list=[]
+    
+    # ********************* FOllowed athletes
+    for athlete in followed_athletes:
+        follow_athlete_list.append(athlete.followed_athlete.keyword.keyword)
+    print('AThletes list', follow_athlete_list)
     all_athletes = AthleteProfile.objects.all()
     categories = Category.objects.all()
-    context = {'all_athletes': all_athletes,'categories':categories}
+    context = {
+        'all_athletes': all_athletes,
+        'categories':categories,
+        'followed_athletes_list':follow_athlete_list
+        }
     return render(request, 'youtube/athlete_profile/follow_athletes.html', context)
 
 def athlete_profile(request):
@@ -1063,14 +1076,33 @@ def athlete_profile(request):
     return render(request, 'youtube/athlete_profile/athlete_profile.html', context)
 
 # Follow an athlete using AJAX
+@csrf_exempt
 def follow_athlete_ajax(request):
     if request.method == 'POST':
         follow_athlete_keyword=request.POST.get('follow_athlete_keyword')
         print('AJAX follow athlete keyword', follow_athlete_keyword)
         try:
-            pass
+            athlete_profile_obj = AthleteProfile.objects.filter(keyword__keyword=follow_athlete_keyword)
+            follow_athlete_obj = FollowedAthletes.objects.create(user = request.user, followed_athlete = athlete_profile_obj[0])
+            follow_athlete_obj.save()
         except:
             pass
+
+    return HttpResponse('success')
+
+# UNFollow an athlete using AJAX
+@csrf_exempt
+def unfollow_athlete_ajax(request):
+    if request.method == 'POST':
+        follow_athlete_keyword=request.POST.get('follow_athlete_keyword')
+        print('AJAX unfollow athlete keyword ', follow_athlete_keyword)
+        try:
+            athlete_profile_obj = AthleteProfile.objects.filter(keyword__keyword=follow_athlete_keyword)
+            follow_athlete_obj = FollowedAthletes.objects.filter(user = request.user, followed_athlete = athlete_profile_obj[0])
+            follow_athlete_obj[0].delete()
+        except Exception as e:
+            print(e)
+            
 
     return HttpResponse('success')
 

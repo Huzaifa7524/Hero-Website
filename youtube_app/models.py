@@ -95,6 +95,8 @@ class AthleteProfile(models.Model):
 class FollowedAthletes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     followed_athlete = models.ForeignKey(AthleteProfile, on_delete=models.CASCADE)
+    def __str__(self) :
+        return str(self.user.username)
 
 
 

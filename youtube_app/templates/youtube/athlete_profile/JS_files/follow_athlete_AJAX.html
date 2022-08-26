@@ -14,26 +14,26 @@ function follow_athlete(save_element) {
             // $this.addClass('unsave_button')
             $this.addClass('hidden')
             $this.siblings().removeClass('hidden')
-            console.log('save response', response)
+            console.log('follow response', response)
             
             
             
       
           },
           error:function(){
-              console.log('save url is not working')
+              console.log('follow athlete url is not working')
           }
         });
   }
 
-  function unsave_video(unsave_element) {
+  function unfollow_athlete(unsave_element) {
     var $this = $(unsave_element);
     $.ajax({ 
         method: "POST",
-        url: `/deletewatchlist/`,
+        url: `/unfollow_athlete_ajax_call/`,
         data: {
      
-      'video_id': $this.parent('div').siblings('.video_id').val(),
+            'follow_athlete_keyword': $this.siblings('.athlete_keyword').val(),
     
       
     },
@@ -45,14 +45,14 @@ function follow_athlete(save_element) {
           $this.addClass('hidden')
           $this.siblings().removeClass('hidden')
 
-          console.log('unsave response', response)
+          console.log('unfollow response', response)
           
           
           
     
         },
         error:function(){
-            console.log('unsave url is not working')
+            console.log('unfollow athlete url is not working')
         }
       });
   }

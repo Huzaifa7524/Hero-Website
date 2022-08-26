@@ -7,7 +7,6 @@
 {% block title %} Follow Favourite Athletes{% endblock %}
 {% block extrastylesheet %}
 <link rel="stylesheet" href="{% static 'youtube/css/home.css' %}">
-<link rel="stylesheet" href="{% static 'youtube/css/parts_css/filter_dropdown.css' %}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 {% endblock %}
 {% block content %}
@@ -49,13 +48,13 @@
                 
                      <div >
                         <input hidden class="athlete_keyword" value="{{athlete.keyword.keyword}}">
-                        {% if dat.id.videoId in watchlist_videos %}
-                        <button type="button" class="unsave_button btn_follow  ">Unfollow</button>
-                        <button type="button"  class="save_button hidden btn_follow"onclick="follow_athlete(this)">Follow</button>
+                        {% if athlete.keyword.keyword in followed_athletes_list %}
+                        <button type="button" class=" btn_follow  " onclick="unfollow_athlete(this)">Unfollow</button>
+                        <button type="button"  class=" hidden btn_follow"onclick="follow_athlete(this)">Follow</button>
                         
                         {% else %}
-                        <button type="button"  class="unsave_button hidden btn_follow">Unfollow</button>
-                        <button type="button" class="save_button btn_follow" onclick="follow_athlete(this)">Follow</button>
+                        <button type="button"  class=" hidden btn_follow" onclick="unfollow_athlete(this)">Unfollow</button>
+                        <button type="button" class=" btn_follow" onclick="follow_athlete(this)">Follow</button>
                         {% endif %}
                     </div>     
             </div>
@@ -70,10 +69,8 @@
     </div>
 </div>
 
-{% include 'youtube/JS_work/filtering_videos_javascript.html' %}
-{% include 'youtube/JS_work/adding_data_on_scrolling_js.html' %}
-{% include 'youtube/JS_work/most_recent_on_scroll_js.html' %}
-{% include 'youtube/JS_work/home_data_on_load_ajax_js.html' %}
+{% include 'youtube/athlete_profile/JS_files/follow_athlete_AJAX.html' %}
+
 
 {% endblock %}
 {% block extrascript %}

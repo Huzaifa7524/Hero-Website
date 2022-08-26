@@ -31,3 +31,6 @@
     flex-direction: column;
     justify-content: center;
   }
+  .channel_video_title{
+    font-weight: 700;
+  }

@@ -42,6 +42,11 @@ urlpatterns = [
 
     # Follow an athlete AJAX
     path('follow_athlete_ajax_call/', views.follow_athlete_ajax, name='follow_athlete_ajax_call'),
+    # unFollow an athlete AJAX
+    path('unfollow_athlete_ajax_call/', views.unfollow_athlete_ajax, name='unfollow_athlete_ajax_call'),
+
+
+
     # for testing purposes
     path('test/', views.test, name='test'),
     
