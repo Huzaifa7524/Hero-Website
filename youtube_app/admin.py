@@ -51,15 +51,31 @@ admin.site.register(RandomVideo, RandomVideoAdmin)
 
 
 # ************* Filter to make most_recent = False for all quersets 
+@admin.action(description='Remove videos from most recent')
+def remove_recent(modeladmin, request, queryset):
+    queryset.update(most_recent='False')
 
 class KeywordResource(resources.ModelResource):
     class Meta:
         model = Keyword
+        import_id_fields = ('category',)
+        subject = fields.Field(
+            column_name='category',
+            attribute='category',
+            widget=ForeignKeyWidget(Category, 'category'))
             
 class KeywordAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     list_display = ('id','category', 'keyword', 'channel_id','image', 'most_recent')
+    list_filter = ('most_recent',)
+    actions = [remove_recent]
 
     resource_class = KeywordResource
+
+    # ******************** For filtering categories which have is_random field True
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(KeywordAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['category'].queryset = Category.objects.filter(is_random = 'False')
+        return form
 
 admin.site.register(Keyword, KeywordAdmin)
 
