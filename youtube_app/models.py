@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class WatchList(models.Model):
     user= models.ForeignKey(User, on_delete=models.CASCADE)
     video_title= models.CharField(max_length=300)
-    video_description= models.CharField(max_length= 600)
+    video_description= models.CharField(max_length= 1000)
     video_id= models.CharField(max_length= 20)
     channel_title= models.CharField(max_length=100)
     upload_date=models.CharField(max_length=100)
@@ -20,6 +20,7 @@ class Category(models.Model):
     is_random = models.BooleanField(default=False)
     def __str__(self):
         return u'{0}'.format(self.category)
+        
 class Keyword(models.Model):
     category= models.ForeignKey(Category, on_delete=models.CASCADE)
     keyword= models.CharField(max_length=50, null= True, blank=True)
