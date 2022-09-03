@@ -3,6 +3,18 @@ from pyexpat import model
 from unicodedata import category
 from django.db import models
 from django.contrib.auth.models import User
+
+
+
+
+
+# TODO: Must Read!!!!!!!!!!!!
+# TODO: If you add another model class then must add this model in settings.py/ADMIN_REORDER to view it in Django Admin section either create a new Group or add in existing one.
+
+
+
+
+
 # Create your models here.
 class WatchList(models.Model):
     user= models.ForeignKey(User, on_delete=models.CASCADE)
@@ -90,6 +102,9 @@ class AthleteProfileCategory(models.Model):
     category_name = models.CharField(max_length=300, default='')
     def __str__(self) :
         return str(self.category_name)
+    class Meta:
+        verbose_name = ("Profile Category")
+        verbose_name_plural = ("Profile Categories")
 
 class AthleteProfile(models.Model):
     keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
@@ -99,6 +114,9 @@ class AthleteProfile(models.Model):
     country = models.CharField(max_length=200)
     experience = models.CharField(max_length=400)
     bio = models.CharField(max_length=500)
+    class Meta:
+        verbose_name = ("Profile")
+        verbose_name_plural = ("Profile")
 
 
     def __str__(self) :
@@ -107,6 +125,9 @@ class AthleteProfile(models.Model):
 class FollowedAthletes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     followed_athlete = models.ForeignKey(AthleteProfile, on_delete=models.CASCADE)
+    class Meta:
+        verbose_name = ("Followed Athlete")
+        verbose_name_plural = ("Followed Athletes")
     def __str__(self) :
         return str(self.user.username)
 

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'youtube_app',
     'import_export',
+    'admin_reorder',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'admin_reorder.middleware.ModelAdminReorder',
 ]
 
 ROOT_URLCONF = 'Youtube_api.urls'
@@ -143,3 +145,38 @@ MEDIA_ROOT= os.path.join(BASE_DIR, "static/upload_images")
 
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
+
+
+# Divide all the models into different sections
+
+ADMIN_REORDER = (
+# 'youtube_app',
+# ****** Authentication and Authorization ******
+
+{'app': 'auth', 'models': ('auth.User', 'auth.Group')},
+#### First group
+{
+    'app': 'youtube_app', 
+    'label': 'Data Management',
+    'models': (
+        'youtube_app.AllData', 
+        'youtube_app.AthleteProfile', 
+        'youtube_app.AthleteProfileCategory',
+        'youtube_app.Category',
+        'youtube_app.HeroSection',
+        'youtube_app.Keyword',
+        'youtube_app.RandomVideo',
+
+    )
+},
+# Second group: same app, but different label
+{
+    'app': 'youtube_app', 
+    'label': 'User Data',
+    'models': (
+        'youtube_app.FollowedAthletes', 
+        'youtube_app.FollowPersonality',
+        'youtube_app.WatchList',
+    )
+},
+)
