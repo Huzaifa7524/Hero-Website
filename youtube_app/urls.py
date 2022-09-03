@@ -37,7 +37,7 @@ urlpatterns = [
     
 
     #  Athletes profile
-    path('follow_athletes/', views.follow_athlete, name='follow_athletes'),
+    path('follow_athletes/', views.all_profiles_view, name='follow_athletes'),
     path('athlete_profile/', views.athlete_profile, name='athlete_profile'),
 
     # Follow an athlete AJAX

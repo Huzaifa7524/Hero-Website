@@ -107,6 +107,7 @@ class AthleteProfileCategory(models.Model):
         verbose_name_plural = ("Profile Categories")
 
 class AthleteProfile(models.Model):
+    profile_category= models.ForeignKey(AthleteProfileCategory, on_delete=models.CASCADE, blank=True, null=True)
     keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
     avatar_image = models.ImageField(verbose_name='Avatar',null=True, blank=True, upload_to="upload_images/")
     banner_image = models.ImageField(verbose_name='Banner Image',null=True, blank=True, upload_to="upload_images/")

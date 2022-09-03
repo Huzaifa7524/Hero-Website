@@ -1102,26 +1102,27 @@ def test(request):
     return render(request, 'youtube/personality_follow.html')
 
 
-# Athletes Profile views
-def follow_athlete(request):
+# All athletes Athletes Profile views
+def all_profiles_view(request):
     # *********************** FOllowed athletes list
     try:
-        followed_athletes= FollowedAthletes.objects.filter(user=request.user)
+        # *******Athlete profiles which are being followed by  user
+        followed_athletes= FollowedAthletes.objects.filter(user=request.user) 
         follow_athlete_list=[]
-        
         # ********************* FOllowed athletes
         for athlete in followed_athletes:
             follow_athlete_list.append(athlete.followed_athlete.keyword.keyword)
         print('AThletes list', follow_athlete_list)
 
-
+        all_profile_categories = AthleteProfileCategory.objects.all()
 
         all_athletes = AthleteProfile.objects.all()
         categories = Category.objects.all()
         context = {
             'all_athletes': all_athletes,
             'categories':categories,
-            'followed_athletes_list':follow_athlete_list
+            'followed_athletes_list':follow_athlete_list,
+            'profile_categories':all_profile_categories
             }
         return render(request, 'youtube/athlete_profile/follow_athletes.html', context)
     except:

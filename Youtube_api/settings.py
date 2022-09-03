@@ -150,7 +150,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 # Divide all the models into different sections
 
 ADMIN_REORDER = (
-# 'youtube_app',
+
 # ****** Authentication and Authorization ******
 
 {'app': 'auth', 'models': ('auth.User', 'auth.Group')},
