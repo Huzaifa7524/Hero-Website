@@ -624,6 +624,7 @@ def search_view(request):
                 catgegory_var=keyword.category.category
                 search_var= keyword_var+','+catgegory_var
                 if keyword.channel_id:
+                    print('Channel ID exist')
                     try:
                         video_request = youtube.search().list(
                         part='snippet',
