@@ -1,3 +1,4 @@
+from msilib.schema import Class
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields
@@ -112,8 +113,10 @@ class CategoryResource(resources.ModelResource):
 
 class CategoryAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     list_display = ('id', 'category', 'order_of_display', 'is_random')
-
+    verbose_name = ("Lanes")
     resource_class = CategoryResource
+    
+        
 
 
 admin.site.register(Category,CategoryAdmin)
@@ -125,6 +128,12 @@ admin.site.register(FollowPersonality)
 
 # admin.site.register(RandomCategory, RandomCategoryAdmin)
 
-admin.site.register(AthleteProfile)
+# **************************************************************************Athlete Profile
+class AthleteProfileAdmin(ImportExportModelAdmin,admin.ModelAdmin):
+    list_display = ('keyword','avatar_image','banner_image','age','country','experience','bio')
+admin.site.register(AthleteProfile,AthleteProfileAdmin)
+
+
+
 admin.site.register(AthleteProfileCategory)
 admin.site.register(FollowedAthletes)

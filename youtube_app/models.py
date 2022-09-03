@@ -18,8 +18,12 @@ class Category(models.Model):
     category= models.CharField(max_length=40)
     order_of_display=models.IntegerField(default=0)
     is_random = models.BooleanField(default=False)
+    class Meta:
+        verbose_name = ("Lane")
+        verbose_name_plural = ("Lanes")
     def __str__(self):
         return u'{0}'.format(self.category)
+
         
 class Keyword(models.Model):
     category= models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -57,12 +61,14 @@ class RandomVideo(models.Model):
     video_title= models.CharField(max_length=300)
     video_description= models.CharField(max_length= 600)
     video_id= models.CharField(max_length= 20)
-    channel_title= models.CharField(max_length=100, null=True, blank=True)
-    upload_date=models.CharField(max_length=100)
-    channel_id= models.CharField(max_length=100)
+    channel_title= models.CharField(verbose_name="Channel Title (Optional) ",max_length=100, null=True, blank=True)
+    upload_date=models.CharField( verbose_name="Uploaded Date (Optional) ",max_length=100, null=True, blank=True)
+    channel_id= models.CharField(verbose_name="Channel ID (Optional) ",max_length=100, null=True, blank=True)
     video_thumbnail_pic_url= models.URLField(max_length=200, default='', null=True, blank=True)
     video_thumbnail_pic_local = models.ImageField(verbose_name='Thumbnail Image',null=True, blank=True, upload_to="upload_images/")
-    
+    class Meta:
+        verbose_name = ("Managed Video")
+        verbose_name_plural = ("Managed Videos")    
 
 class HeroSection(models.Model):
     video_title= models.CharField(max_length=300 , default='')
@@ -72,6 +78,9 @@ class HeroSection(models.Model):
     upload_date=models.CharField(max_length=100, default='')
     channel_id= models.CharField(max_length=100, default='')
     background_image_url= models.URLField(max_length=200 , default='')
+    class Meta:
+        verbose_name = ("Hero Corousel")
+        verbose_name_plural = ("Hero Corousels") 
     
 
   
