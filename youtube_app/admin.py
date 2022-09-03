@@ -68,7 +68,7 @@ class KeywordResource(resources.ModelResource):
             
 class KeywordAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     list_display = ('id','category', 'keyword', 'channel_id','image', 'most_recent')
-    #  Filter Data according to different categories. Just add the field name to filter by the field 
+    # ************** Filter Data according to different categories and most recent. Just add the field name to filter by the field 
     list_filter = ('most_recent','category')
     actions = [remove_recent]
 

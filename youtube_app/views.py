@@ -623,31 +623,74 @@ def search_view(request):
                 keyword_var= keyword.keyword
                 catgegory_var=keyword.category.category
                 search_var= keyword_var+','+catgegory_var
-                video_request = youtube.search().list(
+                if keyword.channel_id:
+                    try:
+                        video_request = youtube.search().list(
                         part='snippet',
                         type='video',
-                        q=search_var,
+                        # q='Athletes,Football, Volleyball',
+                        channelId= keyword.channel_id,
                         maxResults=50,
-                        order= 'date' 
-                    )
-                video_response = video_request.execute()
-                video_items= video_response['items']
-                # ******************* If search result did not return proper result
-                if len(video_items) < 10:
-                    print('************** Len is less than 2s')
+                        order= 'date'
+                        
+                    
+                        )
+                        video_response = video_request.execute()
+                        video_items= video_response['items']
+                    except:
+                        video_request = youtube.search().list(
+                                        part='snippet',
+                                        type='video',
+                                        q=search_var,
+                                        maxResults=50,
+                                        order= 'date' 
+                            )
+                        video_response = video_request.execute()
+                        video_items= video_response['items']
+                        # ******************* If search result did not return proper result
+                        if len(video_items) < 10:
+                            print('************** Len is less than 2s')
+                            video_request = youtube.search().list(
+                                part='snippet',
+                                type='video',
+                                q=keyword_var,
+                                maxResults=50,
+                                order= 'date' 
+                            )
+                            video_response = video_request.execute()
+                            video_items= video_response['items']
+                        if not len(video_items):
+                            print('empty',video_items)
+                            keyword_obj= keyword_obj[0]
+                            video_items = keyword_obj.data
+                        
+                else:
                     video_request = youtube.search().list(
-                        part='snippet',
-                        type='video',
-                        q=keyword_var,
-                        maxResults=50,
-                        order= 'date' 
-                    )
+                            part='snippet',
+                            type='video',
+                            q=search_var,
+                            maxResults=50,
+                            order= 'date' 
+                        )
                     video_response = video_request.execute()
                     video_items= video_response['items']
-                if not len(video_items):
-                    print('empty',video_items)
-                    keyword_obj= keyword_obj[0]
-                    video_items = keyword_obj.data
+                    # ******************* If search result did not return proper result
+                    if len(video_items) < 10:
+                        print('************** Len is less than 2s')
+                        video_request = youtube.search().list(
+                            part='snippet',
+                            type='video',
+                            q=keyword_var,
+                            maxResults=50,
+                            order= 'date' 
+                        )
+                        video_response = video_request.execute()
+                        video_items= video_response['items']
+                    if not len(video_items):
+                        print('empty',video_items)
+                        keyword_obj= keyword_obj[0]
+                        video_items = keyword_obj.data
+                    
                 watchlist_videos= WatchList.objects.filter(user=request.user)
                 All_keywords= Keyword.objects.all()
                 videos_id_list=[]
