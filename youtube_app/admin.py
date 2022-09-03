@@ -55,9 +55,10 @@ admin.site.register(RandomVideo, RandomVideoAdmin)
 @admin.action(description='Remove videos from most recent')
 def remove_recent(modeladmin, request, queryset):
     queryset.update(most_recent='False')
-
+#
 class KeywordResource(resources.ModelResource):
     class Meta:
+        # for Showing foreign key data in foreign key field
         model = Keyword
         import_id_fields = ('category',)
         subject = fields.Field(
@@ -67,7 +68,8 @@ class KeywordResource(resources.ModelResource):
             
 class KeywordAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     list_display = ('id','category', 'keyword', 'channel_id','image', 'most_recent')
-    list_filter = ('most_recent',)
+    #  Filter Data according to different categories. Just add the field name to filter by the field 
+    list_filter = ('most_recent','category')
     actions = [remove_recent]
 
     resource_class = KeywordResource
