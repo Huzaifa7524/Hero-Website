@@ -75,24 +75,24 @@ WSGI_APPLICATION = 'Youtube_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
-#  Externally created database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'defaultdb',
-        'USER': 'doadmin',
-        'PASSWORD': 'AVNS_NKXIiqyP2TTA26jjk7_',
-        'HOST': 'db-postgresql-nyc3-15767-do-user-12341573-0.b.db.ondigitalocean.com',
-        'PORT': '25060',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+#  Externally created database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'defaultdb',
+#         'USER': 'doadmin',
+#         'PASSWORD': 'AVNS_NKXIiqyP2TTA26jjk7_',
+#         'HOST': 'db-postgresql-nyc3-15767-do-user-12341573-0.b.db.ondigitalocean.com',
+#         'PORT': '25060',
+#     }
+# }
 
 
 # Password validation

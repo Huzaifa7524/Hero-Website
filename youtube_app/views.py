@@ -469,8 +469,18 @@ def video_view(request):
         video_title= request.POST.get('video_title')
         video_id= request.POST.get('video_id')
         channel_title= request.POST.get('channel_title')
-        channel_profile= request.POST.get('channel_id')
+        # channel_profile= request.POST.get('channel_id')
         # print('video_id', video_id)
+        # ************************** Getting video statistics
+        
+        request_video_statistics = youtube.videos().list(
+                        part="statistics,snippet",
+                        id=video_id,
+                        maxResults=1
+                        )
+        response_video_statistics = request_video_statistics.execute()
+        video_statistic_items= response_video_statistics['items']
+        channel_profile = video_statistic_items[0]['snippet']['channelId']
         # *************************** To get the channel profile pic
         request_channel_snippet = youtube.channels().list(
             part='snippet',
@@ -481,18 +491,13 @@ def video_view(request):
         snippet_item= snippet_items[0]
         profile_picture= snippet_item['snippet']['thumbnails']['default']['url']
         # End profile picture
-        video_date= request.POST.get('video_date')
+        
+        
+        # *********************** Getting video data 
+        video_date = video_statistic_items[0]['snippet']['publishedAt']
+        # video_date= request.POST.get('video_date')
         d1 = datetime.datetime.strptime(video_date,"%Y-%m-%dT%H:%M:%SZ")
 
-        # ************************** Getting video statistics
-        
-        request_video_statistics = youtube.videos().list(
-                        part="statistics,snippet",
-                        id=video_id,
-                        maxResults=1
-                        )
-        response_video_statistics = request_video_statistics.execute()
-        video_statistic_items= response_video_statistics['items']
         
         # ***************** Getting related videos *********************
         video_request = youtube.search().list(
