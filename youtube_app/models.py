@@ -99,6 +99,7 @@ class HeroSection(models.Model):
 # Athletes Profile
 # 1- Athletes profile categories
 class AthleteProfileCategory(models.Model):
+    id= models.BigIntegerField(primary_key=True)
     category_name = models.CharField(max_length=300, default='')
     def __str__(self) :
         return str(self.category_name)
