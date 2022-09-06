@@ -104,6 +104,7 @@ function autocomplete(inp, arr) {
 
 $("#myInput").click(function(){
     var $this = $(this);
+    console.log("****************");
     $.ajax({ 
           method: "GET",
           url: `/auto_complete/`,

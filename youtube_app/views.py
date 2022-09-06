@@ -6,6 +6,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render,redirect
 
 from .models import *
+from users_data.models import*
 from googleapiclient.discovery import build
 from django.contrib.auth.models import User
 import datetime
@@ -712,7 +713,7 @@ def search_view(request):
 def auto_complete(request):
     
     All_keywords= Keyword.objects.all()
-    keywords_list=[]
+    keywords_list=list()
     for keyword in All_keywords:
         keywords_list.append(keyword.keyword)
     # print(keywords_list)   

@@ -12,20 +12,6 @@ from django.contrib.auth.models import User
 # TODO: If you add another model class then must add this model in settings.py/ADMIN_REORDER to view it in Django Admin section either create a new Group or add in existing one.
 
 
-
-
-
-# Create your models here.
-class WatchList(models.Model):
-    user= models.ForeignKey(User, on_delete=models.CASCADE)
-    video_title= models.CharField(max_length=300)
-    video_description= models.CharField(max_length= 1000)
-    video_id= models.CharField(max_length= 20)
-    channel_title= models.CharField(max_length=100)
-    upload_date=models.CharField(max_length=100)
-    channel_profile_pic= models.CharField(max_length=100)
-    video_thumbnail_pic= models.CharField(max_length=100)
-
 class Category(models.Model):
     category= models.CharField(max_length=40)
     order_of_display=models.IntegerField(default=0)
@@ -45,19 +31,11 @@ class Keyword(models.Model):
     data=models.JSONField(null= True, blank=True)
     most_recent= models.BooleanField(default=True)
     def __str__(self):
-        return u'{0}'.format(self.keyword)
+        return u'{0}'.format("K-W ="+str(self.keyword)+" C-ID ="+str(self.channel_id))
 
 class AllData(models.Model):
     data= models.JSONField(null=True, blank=True)
 
-
-class FollowPersonality(models.Model):
-    user=models.ForeignKey(User, on_delete=models.CASCADE, default=None)
-    keyword= models.ForeignKey(Keyword, on_delete=models.CASCADE)
-    def __str__(self):
-        return str(self.keyword.keyword)
-    def __str__(self):
-        return "{0}".format(self.keyword.keyword)
 
 # Random categories
 # class RandomCategory(models.Model):
@@ -124,14 +102,6 @@ class AthleteProfile(models.Model):
     def __str__(self) :
         return str(self.keyword.keyword)
 
-class FollowedAthletes(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    followed_athlete = models.ForeignKey(AthleteProfile, on_delete=models.CASCADE)
-    class Meta:
-        verbose_name = ("Followed Athlete")
-        verbose_name_plural = ("Followed Athletes")
-    def __str__(self) :
-        return str(self.user.username)
 
 
 

@@ -1,6 +1,6 @@
 from atexit import register
 from django import template
-from youtube_app.models import WatchList
+from users_data.models import WatchList
 register= template.Library()
 @register.filter(name='subscribersinthousand')
 def subscribersinthousand(number):

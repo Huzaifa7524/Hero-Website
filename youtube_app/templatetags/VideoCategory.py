@@ -1,6 +1,7 @@
 from atexit import register
 from django import template
-from youtube_app.models import WatchList, Category, Keyword
+from users_data.models import WatchList
+from youtube_app.models import Category, Keyword
 register= template.Library()
 @register.filter(name='VideoCategory')
 def VideoCategory(string_value):

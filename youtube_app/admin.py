@@ -8,19 +8,6 @@ from youtube_app.models import *
 
 # Register your models here.
 
-# *************************************************************************** Watch List
-
-class WatchListResource(resources.ModelResource):
-
-    class Meta:
-        model = WatchList
-
-class WatchListAdmin(ImportExportModelAdmin,admin.ModelAdmin):
-    list_display = ('id','user','video_title','video_description','video_id','channel_title','upload_date','channel_profile_pic','video_thumbnail_pic')
-    resource_class = WatchListResource
-
-admin.site.register(WatchList, WatchListAdmin)
-
 
 # *************************************************************************** Random Video
 
@@ -125,7 +112,6 @@ admin.site.register(Category,CategoryAdmin)
 
 
 admin.site.register(AllData)
-admin.site.register(FollowPersonality)
 
 # admin.site.register(RandomCategory, RandomCategoryAdmin)
 
@@ -137,4 +123,3 @@ admin.site.register(AthleteProfile,AthleteProfileAdmin)
 
 
 admin.site.register(AthleteProfileCategory)
-admin.site.register(FollowedAthletes)
