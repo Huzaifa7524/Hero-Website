@@ -715,7 +715,8 @@ def auto_complete(request):
     All_keywords= Keyword.objects.all()
     keywords_list=list()
     for keyword in All_keywords:
-        keywords_list.append(keyword.keyword)
+        if keyword.keyword:
+            keywords_list.append(keyword.keyword)
     # print(keywords_list)   
     return JsonResponse({'data': keywords_list,})
     # return HttpResponse(json_list)
