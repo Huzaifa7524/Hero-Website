@@ -23,11 +23,7 @@
       
     </div>
     
-    <div class="videos_main_div {{i.category_name|cut:' '}}" >
-     
-        
-        
-     
+    <div class="videos_main_div">
         {% for athlete in all_athletes %}
         {% if athlete.profile_category.category_name == profile.category_name %}
         <div class="video_box ">
