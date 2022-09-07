@@ -69,6 +69,17 @@
     height: 60px;
     overflow: hidden;
 }
+
+.btn-div{
+  display: flex;
+  align-items: center;
+}
+
+.block-link{
+  color: red;
+  cursor: pointer;
+}
+
 .save_button{
     border: none !important;
     background: white;

@@ -40,6 +40,9 @@ urlpatterns = [
     path('follow_athletes/', views.all_profiles_view, name='follow_athletes'),
     path('athlete_profile/', views.athlete_profile, name='athlete_profile'),
 
+    # Community  
+    path('community/', views.community, name='community'),
+
     # Follow an athlete AJAX
     path('follow_athlete_ajax_call/', views.follow_athlete_ajax, name='follow_athlete_ajax_call'),
     # unFollow an athlete AJAX
@@ -49,6 +52,9 @@ urlpatterns = [
 
     # for testing purposes
     path('test/', views.test, name='test'),
+
+    # blocking video
+    path('block_video/<str:id>/', views.block_video, name="block_video")
     
    
 ]

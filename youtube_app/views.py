@@ -15,6 +15,7 @@ import json
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 import random
+from django.contrib.auth.decorators import login_required
 
 
 # Youtube API Key
@@ -732,6 +733,13 @@ def update_data_db(request):
     api_key_6= 'AIzaSyAczxkO9D2vorvtomWQwtGLEnQ2FjmRdjk'
     youtube_db = build('youtube', 'v3', developerKey=api_key_6)
     all_keywords= Keyword.objects.all()
+
+    blackListVideos = BlackListVideos.objects.all()
+    blockIDList = []
+    for b in blackListVideos:
+        blockIDList.append(b.video_id)
+
+
     keyword_var=''
     data_list= []
     dummy_data_list=[]
@@ -754,16 +762,20 @@ def update_data_db(request):
                         channelId= channel_id,
                         maxResults=50,
                         order= 'date'
-                        
-                    
                     )
                     video_response = video_request.execute()
                     video_items= video_response['items']
                     print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                     print('video Items', video_items)
                     print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                    data_list = data_list+video_items
-                    keyword.data=video_items
+                    temp = video_items
+                    temp2 = list()
+                    for video_data in temp:
+                        if(video_data['id']['videoId'] not in blockIDList):
+                            temp2.append(video_data)
+
+                    data_list = data_list+temp2
+                    keyword.data=temp2
                     keyword.save()
                 except:
                     try:
@@ -801,8 +813,13 @@ def update_data_db(request):
                                 print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                                 print('video Items', video_items)
                                 print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                            data_list = data_list+video_items
-                            keyword.data=video_items
+                            temp = video_items
+                            temp2 = list()
+                            for video_data in temp:
+                                if(video_data['id']['videoId'] not in blockIDList):
+                                    temp2.append(video_data)
+                            data_list = data_list+temp2
+                            keyword.data=temp2
                             keyword.save()
                     except Exception as e1:
 
@@ -850,8 +867,13 @@ def update_data_db(request):
                                 print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                                 print('video Items', video_items)
                                 print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                            data_list = data_list+video_items
-                            keyword.data=video_items
+                            temp = video_items
+                            temp2 = list()
+                            for video_data in temp:
+                                if(video_data['id']['videoId'] not in blockIDList):
+                                    temp2.append(video_data)
+                            data_list = data_list+temp2
+                            keyword.data=temp2
                             keyword.save()
                     except Exception as e1:
                         print('____________Except 1_____________________')
@@ -1128,7 +1150,6 @@ def all_profiles_view(request):
         }
     return render(request, 'youtube/athlete_profile/follow_athletes.html', context)
 
-
 def athlete_profile(request):
     if request.method == 'POST':
         athlete_keyword = request.POST.get('athlete_keyword')
@@ -1162,6 +1183,29 @@ def athlete_profile(request):
             'followed_athletes_list':follow_athlete_list
         }
     return render(request, 'youtube/athlete_profile/athlete_profile.html', context)
+
+def community(request):
+    # *********************** FOllowed athletes list
+
+    # *******Athlete profiles which are being followed by  user
+    followed_athletes= FollowedAthletes.objects.filter(user=request.user) 
+    follow_athlete_list=[]
+    # ********************* FOllowed athletes
+    for athlete in followed_athletes:
+        follow_athlete_list.append(athlete.followed_athlete.keyword.keyword)
+    print('AThletes list', follow_athlete_list)
+
+    all_profile_categories = AthleteProfileCategory.objects.all()
+
+    all_athletes = AthleteProfile.objects.all()
+    categories = Category.objects.all()
+    context = {
+        'all_athletes': all_athletes,
+        'categories':categories,
+        'followed_athletes_list':follow_athlete_list,
+        'profile_categories':all_profile_categories
+        }
+    return render(request, 'youtube/athlete_profile/follow_athletes.html', context)
 
 # Follow an athlete using AJAX
 @csrf_exempt
@@ -1216,3 +1260,10 @@ def type_of_filter(filter_key):
     if filter_key== 'View Count' or filter_key== 'view count':
         returned_value='viewCount'
         return returned_value
+
+@login_required(login_url="login")
+def block_video(request,id):
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    print(id,"$$$$$$$$$$$$$$$$$$$$$$$")
+    BlackListVideos.objects.create(video_id = id).save()
+    return redirect('home')

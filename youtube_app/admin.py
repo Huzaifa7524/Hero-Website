@@ -123,3 +123,5 @@ admin.site.register(AthleteProfile,AthleteProfileAdmin)
 
 
 admin.site.register(AthleteProfileCategory)
+
+admin.site.register(BlackListVideos)

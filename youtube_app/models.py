@@ -82,8 +82,8 @@ class AthleteProfileCategory(models.Model):
     def __str__(self) :
         return str(self.category_name)
     class Meta:
-        verbose_name = ("Profile Category")
-        verbose_name_plural = ("Profile Categories")
+        verbose_name = ("Athlete Profile Categories")
+        verbose_name_plural = (" Athlete Profile Categories")
 
 class AthleteProfile(models.Model):
     profile_category= models.ForeignKey(AthleteProfileCategory, on_delete=models.CASCADE, blank=True, null=True)
@@ -95,12 +95,49 @@ class AthleteProfile(models.Model):
     experience = models.CharField(max_length=400)
     bio = models.CharField(max_length=500)
     class Meta:
-        verbose_name = ("Profile")
-        verbose_name_plural = ("Profile")
+        verbose_name = ("Athlete Profiles")
+        verbose_name_plural = ("Athlete Profiles")
 
 
     def __str__(self) :
         return str(self.keyword.keyword)
+
+
+# Community Profile
+# 1- Community profile categories
+class CommunityProfileCategory(models.Model):
+    id= models.BigIntegerField(primary_key=True)
+    category_name = models.CharField(max_length=300, default='')
+    def __str__(self) :
+        return str(self.category_name)
+    class Meta:
+        verbose_name = ("community Profile Categories")
+        verbose_name_plural = ("community Profile Categories")
+
+class CommunityProfile(models.Model):
+    profile_category= models.ForeignKey(CommunityProfileCategory, on_delete=models.CASCADE, blank=True, null=True)
+    keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
+    avatar_image = models.ImageField(verbose_name='Avatar',null=True, blank=True, upload_to="upload_images/")
+    banner_image = models.ImageField(verbose_name='Banner Image',null=True, blank=True, upload_to="upload_images/")
+    age = models.IntegerField()
+    country = models.CharField(max_length=200)
+    experience = models.CharField(max_length=400)
+    bio = models.CharField(max_length=500)
+    class Meta:
+        verbose_name = ("Community Profiles")
+        verbose_name_plural = ("Community Profiles")
+
+
+    def __str__(self) :
+        return str(self.keyword.keyword)
+
+        
+
+class BlackListVideos(models.Model):
+    video_id = models.CharField(max_length=400)
+
+    def __str__(self) :
+        return str(self.video_id)
 
 
 

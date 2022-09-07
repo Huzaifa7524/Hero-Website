@@ -95,6 +95,17 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'Hero-WebSite',
+#         'USER': 'postgres',
+#         'PASSWORD': '123',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -142,10 +153,6 @@ STATICFILES_DIRS= [
 MEDIA_ROOT= os.path.join(BASE_DIR, "static/upload_images")
 
 
-
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
-
-
 # Divide all the models into different sections
 
 # ADMIN_REORDER = (
@@ -179,3 +186,6 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 #     )
 # },
 # )
+
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 9242880
