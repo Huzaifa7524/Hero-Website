@@ -1,4 +1,5 @@
 from ast import keyword
+from email.policy import default
 from pyexpat import model
 from unicodedata import category
 from django.db import models
@@ -89,7 +90,7 @@ class AthleteProfile(models.Model):
     name = models.CharField(max_length=1000, blank=True)
     profile_category= models.ForeignKey(AthleteProfileCategory, on_delete=models.CASCADE, blank=True, null=True)
     keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
-    avatar_image = models.ImageField(verbose_name='Avatar',null=True, blank=True, upload_to="upload_images/")
+    avatar_image = models.ImageField(verbose_name='Avatar', upload_to="upload_images/", default="upload_images/default.png")
     banner_image = models.ImageField(verbose_name='Banner Image',null=True, blank=True, upload_to="upload_images/")
     age = models.IntegerField(null=True, blank=True)
     country = models.CharField(max_length=200, null=True, blank=True)
@@ -120,7 +121,7 @@ class CommunityProfile(models.Model):
     profile_category= models.ForeignKey(CommunityProfileCategory, on_delete=models.CASCADE, blank=True, null=True)
     keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
     avatar_image = models.ImageField(verbose_name='Avatar',null=True, blank=True, upload_to="upload_images/")
-    banner_image = models.ImageField(verbose_name='Banner Image',null=True, blank=True, upload_to="upload_images/")
+    banner_image = models.ImageField(verbose_name='Banner Image', upload_to="upload_images/", default="upload_images/default.png")
     age = models.IntegerField(null=True, blank=True)
     country = models.CharField(max_length=200, null=True, blank=True)
     experience = models.CharField(max_length=400, null=True, blank=True)
