@@ -86,6 +86,7 @@ class AthleteProfileCategory(models.Model):
         verbose_name_plural = (" Athlete Profile Categories")
 
 class AthleteProfile(models.Model):
+    name = models.CharField(max_length=1000, blank=True)
     profile_category= models.ForeignKey(AthleteProfileCategory, on_delete=models.CASCADE, blank=True, null=True)
     keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
     avatar_image = models.ImageField(verbose_name='Avatar',null=True, blank=True, upload_to="upload_images/")
@@ -115,6 +116,7 @@ class CommunityProfileCategory(models.Model):
         verbose_name_plural = ("community Profile Categories")
 
 class CommunityProfile(models.Model):
+    name = models.CharField(max_length=1000, blank=True)
     profile_category= models.ForeignKey(CommunityProfileCategory, on_delete=models.CASCADE, blank=True, null=True)
     keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
     avatar_image = models.ImageField(verbose_name='Avatar',null=True, blank=True, upload_to="upload_images/")
