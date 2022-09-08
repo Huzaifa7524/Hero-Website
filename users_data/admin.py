@@ -22,3 +22,5 @@ admin.site.register(WatchList, WatchListAdmin)
 admin.site.register(FollowedAthletes)
 
 admin.site.register(FollowPersonality)
+
+admin.site.register(FollowedCommunity)

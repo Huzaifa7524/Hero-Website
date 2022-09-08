@@ -1190,24 +1190,24 @@ def community(request):
     # *********************** FOllowed athletes list
 
     # *******Athlete profiles which are being followed by  user
-    followed_athletes= FollowedAthletes.objects.filter(user=request.user) 
-    follow_athlete_list=[]
+    followed_athletes= FollowedCommunity.objects.filter(user=request.user) 
+    follow_community_list=[]
     # ********************* FOllowed athletes
     for athlete in followed_athletes:
-        follow_athlete_list.append(athlete.followed_athlete.keyword.keyword)
-    print('AThletes list', follow_athlete_list)
+        follow_community_list.append(athlete.followed_community.keyword.keyword)
+    print('AThletes list', follow_community_list)
 
-    all_profile_categories = AthleteProfileCategory.objects.all()
+    all_profile_categories = CommunityProfileCategory.objects.all()
 
-    all_athletes = AthleteProfile.objects.all()
+    all_community = CommunityProfile.objects.all()
     categories = Category.objects.all()
     context = {
-        'all_athletes': all_athletes,
+        'all_community': all_community,
         'categories':categories,
-        'followed_athletes_list':follow_athlete_list,
+        'follow_community_list':follow_community_list,
         'profile_categories':all_profile_categories
         }
-    return render(request, 'youtube/athlete_profile/follow_athletes.html', context)
+    return render(request, 'youtube/community/community.html', context)
 
 # Follow an athlete using AJAX
 @csrf_exempt
@@ -1234,6 +1234,42 @@ def unfollow_athlete_ajax(request):
             athlete_profile_obj = AthleteProfile.objects.filter(keyword__keyword=follow_athlete_keyword)
             follow_athlete_obj = FollowedAthletes.objects.filter(user = request.user, followed_athlete = athlete_profile_obj[0])
             follow_athlete_obj[0].delete()
+        except Exception as e:
+            print(e)
+            
+
+    return HttpResponse('success')
+
+
+
+# Follow an community using AJAX
+@csrf_exempt
+def follow_community_ajax_call(request):
+    if request.method == 'POST':
+        follow_athlete_keyword=request.POST.get('follow_community_keyword')
+        print('AJAX follow athlete keyword', follow_athlete_keyword)
+        try:
+            community_profile_obj = CommunityProfile.objects.filter(keyword__keyword=follow_athlete_keyword)
+            
+            print(community_profile_obj,"*************")
+
+            follow_community_obj = FollowedCommunity.objects.create(user = request.user, followed_community = community_profile_obj[0])
+            follow_community_obj.save()
+        except:
+            pass
+
+    return HttpResponse('success')
+
+# UNFollow an community using AJAX
+@csrf_exempt
+def unfollow_community_ajax_call(request):
+    if request.method == 'POST':
+        follow_athlete_keyword=request.POST.get('follow_community_keyword')
+        print('AJAX unfollow athlete keyword ', follow_athlete_keyword)
+        try:
+            community_profile_obj = CommunityProfile.objects.filter(keyword__keyword=follow_athlete_keyword)
+            follow_community_obj = FollowedCommunity.objects.filter(user = request.user, followed_community = community_profile_obj[0])
+            follow_community_obj[0].delete()
         except Exception as e:
             print(e)
             

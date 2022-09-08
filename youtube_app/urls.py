@@ -40,14 +40,18 @@ urlpatterns = [
     path('follow_athletes/', views.all_profiles_view, name='follow_athletes'),
     path('athlete_profile/', views.athlete_profile, name='athlete_profile'),
 
-    # Community  
-    path('community/', views.community, name='community'),
-
     # Follow an athlete AJAX
     path('follow_athlete_ajax_call/', views.follow_athlete_ajax, name='follow_athlete_ajax_call'),
     # unFollow an athlete AJAX
     path('unfollow_athlete_ajax_call/', views.unfollow_athlete_ajax, name='unfollow_athlete_ajax_call'),
 
+    # Community  
+    path('community/', views.community, name='community'),
+
+    # Follow an athlete AJAX
+    path('follow_community_ajax_call/', views.follow_community_ajax_call, name='follow_community_ajax_call'),
+    # unFollow an athlete AJAX
+    path('unfollow_community_ajax_call/', views.unfollow_community_ajax_call, name='unfollow_community_ajax_call'),
 
 
     # for testing purposes

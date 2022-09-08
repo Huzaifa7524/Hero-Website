@@ -118,10 +118,20 @@ admin.site.register(AllData)
 # **************************************************************************Athlete Profile
 class AthleteProfileAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     list_display = ('keyword','avatar_image','banner_image','age','country','experience','bio')
+
 admin.site.register(AthleteProfile,AthleteProfileAdmin)
 
-
-
 admin.site.register(AthleteProfileCategory)
+
+
+
+# ***************************************************************************Community Profile
+
+class CommunityProfileAdmin(ImportExportModelAdmin,admin.ModelAdmin):
+    list_display = ('keyword','avatar_image','banner_image','age','country','experience','bio')
+admin.site.register(CommunityProfile,CommunityProfileAdmin)
+
+admin.site.register(CommunityProfileCategory)
+
 
 admin.site.register(BlackListVideos)

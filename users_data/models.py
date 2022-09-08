@@ -14,6 +14,17 @@ class FollowedAthletes(models.Model):
     def __str__(self) :
         return str(self.user.username)
 
+
+class FollowedCommunity(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    followed_community = models.ForeignKey(CommunityProfile, on_delete=models.CASCADE)
+    class Meta:
+        verbose_name = ("Followed Community")
+        verbose_name_plural = ("Followed Community")
+    def __str__(self) :
+        return str(self.user.username)
+
+
 class FollowPersonality(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     keyword= models.ForeignKey(Keyword, on_delete=models.CASCADE)
@@ -22,7 +33,7 @@ class FollowPersonality(models.Model):
     def __str__(self):
         return "{0}".format(self.keyword.keyword)
 
-# Create your models here.
+
 class WatchList(models.Model):
     user= models.ForeignKey(User, on_delete=models.CASCADE)
     video_title= models.CharField(max_length=300)
