@@ -134,10 +134,11 @@ class CommunityProfile(models.Model):
         
 
 class BlackListVideos(models.Model):
-    video_id = models.CharField(max_length=400)
+    video_id = models.CharField(max_length=400,null=True, blank=True)
+    channel_id = models.CharField(max_length=400,null=True, blank=True)
 
     def __str__(self) :
-        return str(self.video_id)
+        return str("VideoID="+self.video_id+"ChannelID="+self.channel_id)
 
 
 

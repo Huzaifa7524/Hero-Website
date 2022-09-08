@@ -83,28 +83,28 @@ WSGI_APPLICATION = 'Youtube_api.wsgi.application'
 #     }
 # }
 
-#  Externally created database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'defaultdb',
-        'USER': 'doadmin',
-        'PASSWORD': 'AVNS_NKXIiqyP2TTA26jjk7_',
-        'HOST': 'db-postgresql-nyc3-15767-do-user-12341573-0.b.db.ondigitalocean.com',
-        'PORT': '25060',
-    }
-}
-
+# #  Externally created database
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'Hero-WebSite',
-#         'USER': 'postgres',
-#         'PASSWORD': '123',
-#         'HOST': 'localhost',
-#         'PORT': '',
+#         'NAME': 'defaultdb',
+#         'USER': 'doadmin',
+#         'PASSWORD': 'AVNS_NKXIiqyP2TTA26jjk7_',
+#         'HOST': 'db-postgresql-nyc3-15767-do-user-12341573-0.b.db.ondigitalocean.com',
+#         'PORT': '25060',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'Hero-WebSite',
+        'USER': 'postgres',
+        'PASSWORD': '123',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
 
 
 # Password validation

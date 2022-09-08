@@ -735,9 +735,11 @@ def update_data_db(request):
     all_keywords= Keyword.objects.all()
 
     blackListVideos = BlackListVideos.objects.all()
-    blockIDList = []
+    blockVideoList = []
+    blockChannelList = []
     for b in blackListVideos:
-        blockIDList.append(b.video_id)
+        blockVideoList.append(b.video_id)
+        blockChannelList.append(b.channel_id)
 
 
     keyword_var=''
@@ -752,7 +754,7 @@ def update_data_db(request):
         print(keyword_var, catgegory_var)
         
         try:
-            if channel_id:
+            if channel_id and channel_id not in blockChannelList:
                 try:
                     print('*********Channel id api*******', channel_id)
                     video_request = youtube_db.search().list(
@@ -771,7 +773,7 @@ def update_data_db(request):
                     temp = video_items
                     temp2 = list()
                     for video_data in temp:
-                        if(video_data['id']['videoId'] not in blockIDList):
+                        if(video_data['id']['videoId'] not in blockVideoList):
                             temp2.append(video_data)
 
                     data_list = data_list+temp2
@@ -816,7 +818,7 @@ def update_data_db(request):
                             temp = video_items
                             temp2 = list()
                             for video_data in temp:
-                                if(video_data['id']['videoId'] not in blockIDList):
+                                if(video_data['id']['videoId'] not in blockVideoList):
                                     temp2.append(video_data)
                             data_list = data_list+temp2
                             keyword.data=temp2
@@ -870,7 +872,7 @@ def update_data_db(request):
                             temp = video_items
                             temp2 = list()
                             for video_data in temp:
-                                if(video_data['id']['videoId'] not in blockIDList):
+                                if(video_data['id']['videoId'] not in blockVideoList):
                                     temp2.append(video_data)
                             data_list = data_list+temp2
                             keyword.data=temp2
