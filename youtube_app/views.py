@@ -165,14 +165,18 @@ def home(request):
         followed_athletes_obj = FollowedAthletes.objects.filter(user=request.user).order_by('id')
         print('followed atletes**************', followed_athletes_obj )
         for followed_athlete in followed_athletes_obj:
-            followed_athletes_data_list += followed_athlete.followed_athlete.keyword.data
+            if followed_athlete.followed_athlete.keyword.data:
+                followed_athletes_data_list += followed_athlete.followed_athlete.keyword.data
 
         # ********************** Followed Community data
         followed_community_data_list = []
         followed_community_obj = FollowedCommunity.objects.filter(user=request.user).order_by('id')
         print('followed atletes**************', followed_community_obj )
         for followed_community in followed_community_obj:
-            followed_community_data_list += followed_community.followed_community.keyword.data
+            if followed_community.followed_community.keyword.data:
+                followed_community_data_list += followed_community.followed_community.keyword.data
+
+        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
 
         context= {
             'data': paginator_list,
