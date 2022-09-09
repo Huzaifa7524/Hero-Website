@@ -162,10 +162,17 @@ def home(request):
 
         # ********************** Followed athletes data
         followed_athletes_data_list = []
-        followed_athletes_obj = FollowedAthletes.objects.filter(user=request.user).order_by('-id')
+        followed_athletes_obj = FollowedAthletes.objects.filter(user=request.user).order_by('id')
         print('followed atletes**************', followed_athletes_obj )
         for followed_athlete in followed_athletes_obj:
             followed_athletes_data_list += followed_athlete.followed_athlete.keyword.data
+
+        # ********************** Followed Community data
+        followed_community_data_list = []
+        followed_community_obj = FollowedCommunity.objects.filter(user=request.user).order_by('id')
+        print('followed atletes**************', followed_community_obj )
+        for followed_community in followed_community_obj:
+            followed_community_data_list += followed_community.followed_community.keyword.data
 
         context= {
             'data': paginator_list,
@@ -176,7 +183,8 @@ def home(request):
             'all_random_videos':random_videos, 
             'hero_section':hero_section,
             'followed_athletes':followed_athletes_data_list,
-            'watchlist_videos_data': watchlist_videos
+            'watchlist_videos_data': watchlist_videos,
+            'followed_community':followed_community_data_list
             }
     except:
         pass
