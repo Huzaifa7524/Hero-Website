@@ -768,10 +768,10 @@ def update_data_db(request):
                     video_response = video_request.execute()
                     video_items= video_response['items']
                     print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                    print('video Items', video_items)
+                    # print('video Items', video_items)
                     print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                     temp = video_items
-                    temp2 = list()
+                    temp2 = []
                     for video_data in temp:
                         if(video_data['id']['videoId'] not in blockVideoList):
                             temp2.append(video_data)
@@ -798,7 +798,7 @@ def update_data_db(request):
                             video_response = video_request.execute()
                             video_items= video_response['items']
                             print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                            print('video Items', video_items)
+                            # print('video Items', video_items)
                             print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                             # ******************* If search result did not return proper result
                             if len(video_items) < 10:
@@ -813,10 +813,10 @@ def update_data_db(request):
                                 video_response = video_request.execute()
                                 video_items= video_response['items']
                                 print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                                print('video Items', video_items)
+                                # print('video Items', video_items)
                                 print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                             temp = video_items
-                            temp2 = list()
+                            temp2 = []
                             for video_data in temp:
                                 if(video_data['id']['videoId'] not in blockVideoList):
                                     temp2.append(video_data)
@@ -852,7 +852,7 @@ def update_data_db(request):
                             video_response = video_request.execute()
                             video_items= video_response['items']
                             print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                            print('video Items', video_items)
+                            # print('video Items', video_items)
                             print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                             # ******************* If search result did not return proper result
                             if len(video_items) < 10:
@@ -867,10 +867,10 @@ def update_data_db(request):
                                 video_response = video_request.execute()
                                 video_items= video_response['items']
                                 print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                                print('video Items', video_items)
+                                # print('video Items', video_items)
                                 print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
                             temp = video_items
-                            temp2 = list()
+                            temp2 = []
                             for video_data in temp:
                                 if(video_data['id']['videoId'] not in blockVideoList):
                                     temp2.append(video_data)
