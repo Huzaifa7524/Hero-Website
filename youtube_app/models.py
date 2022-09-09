@@ -102,7 +102,10 @@ class AthleteProfile(models.Model):
 
 
     def __str__(self) :
-        return str(self.keyword.keyword)
+        if self.keyword.keyword:
+            return str(self.keyword.keyword)
+        else:
+            return str(self.keyword.channel_id)
 
 
 # Community Profile
@@ -132,7 +135,10 @@ class CommunityProfile(models.Model):
 
 
     def __str__(self) :
-        return str(self.keyword.keyword)
+        if self.keyword.keyword:
+            return str(self.keyword.keyword)
+        else:
+            return str(self.keyword.channel_id)
 
         
 
