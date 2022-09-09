@@ -19,8 +19,14 @@ class WatchListAdmin(ImportExportModelAdmin,admin.ModelAdmin):
 admin.site.register(WatchList, WatchListAdmin)
 
 
-admin.site.register(FollowedAthletes)
+class FollowedAthletesAdmin(admin.ModelAdmin):
+    list_display = ('user','followed_athlete')
+
+admin.site.register(FollowedAthletes,FollowedAthletesAdmin)
 
 admin.site.register(FollowPersonality)
 
-admin.site.register(FollowedCommunity)
+class FollowedCommunityAdmin(admin.ModelAdmin):
+    list_display = ('user','followed_community')
+
+admin.site.register(FollowedCommunity,FollowedCommunityAdmin)
