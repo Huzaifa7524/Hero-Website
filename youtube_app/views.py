@@ -168,6 +168,9 @@ def home(request):
             if followed_athlete.followed_athlete.keyword.data:
                 followed_athletes_data_list += followed_athlete.followed_athlete.keyword.data
 
+        followed_athletes_data_list = sorted(followed_athletes_data_list, key=lambda x: x['snippet']['publishedAt'])
+
+        
         # ********************** Followed Community data
         followed_community_data_list = []
         followed_community_obj = FollowedCommunity.objects.filter(user=request.user).order_by('id')
@@ -175,6 +178,8 @@ def home(request):
         for followed_community in followed_community_obj:
             if followed_community.followed_community.keyword.data:
                 followed_community_data_list += followed_community.followed_community.keyword.data
+
+        followed_community_data_list = sorted(followed_community_data_list, key=lambda x: x['snippet']['publishedAt'])
 
         print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
 
